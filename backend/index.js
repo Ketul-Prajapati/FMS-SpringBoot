@@ -4,6 +4,7 @@ const app = express();
 connectToMongo();
 const port = 5000 || process.env.PORT;
 var cors = require("cors");
+const path = require("path");
 
 app.use(cors());
 app.use(express.json()); //to convert request data to json
@@ -23,6 +24,12 @@ app.use("/api/notice", require("./routes/notice"));
 app.use("/api/subject", require("./routes/subject"));
 app.use("/api/marks", require("./routes/marks"));
 app.use("/api/branch", require("./routes/branch"));
+
+// Production Script
+app.use(express.static("./frontend/build"));
+app.get("*",(req,res) =>  {
+  res.sendFile(path.resolve(__dirname,"frontend","build","index.html"))
+});
 
 app.listen(port, () => {
   console.log(`Server Listening On http://localhost:${port}`);
