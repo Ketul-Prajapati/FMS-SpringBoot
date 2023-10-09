@@ -42,7 +42,7 @@ const Profile = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, [router.state.loginid, router.state.type]);
+  }, [dispatch,router.state.loginid, router.state.type]);
 
   const checkPasswordHandler = (e) => {
     e.preventDefault();
