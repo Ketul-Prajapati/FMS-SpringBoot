@@ -47,7 +47,7 @@ const Timetable = () => {
         toast.dismiss();
         toast.error(error.response.data.message);
       });
-  }, []);
+  }, [addselected]);
 
   useEffect(() => {
     const uploadFileToStorage = async (file) => {
