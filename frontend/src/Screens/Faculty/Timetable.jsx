@@ -20,6 +20,36 @@ const Timetable = () => {
     getBranchData();
   }, []);
 
+  const addTimetableHandler = () => {
+    toast.loading("Adding Timetable");
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .post(`${baseApiURL()}/timetable/addTimetable`, addselected, {
+        headers: headers,
+      })
+      .then((response) => {
+        toast.dismiss();
+        if (response.data.success) {
+          toast.success(response.data.message);
+          setAddSelected({
+            branch: "",
+            semester: "",
+            link: "",
+          });
+          setFile("");
+        } else {
+          console.log(response);
+          toast.error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        toast.dismiss();
+        toast.error(error.response.data.message);
+      });
+  };
+  
   useEffect(() => {
     const uploadFileToStorage = async (file) => {
       toast.loading("Upload Timetable To Server");
@@ -69,35 +99,6 @@ const Timetable = () => {
       });
   };
 
-  const addTimetableHandler = () => {
-    toast.loading("Adding Timetable");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(`${baseApiURL()}/timetable/addTimetable`, addselected, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          setAddSelected({
-            branch: "",
-            semester: "",
-            link: "",
-          });
-          setFile("");
-        } else {
-          console.log(response);
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
-  };
   return (
     <div className="w-[85%] mx-auto mt-10 flex justify-center items-start flex-col mb-10">
       <div className="flex justify-between items-center w-full">
