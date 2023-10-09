@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useCallback} from "react";
 import { FiUpload } from "react-icons/fi";
 import Heading from "../../components/Heading";
 import { AiOutlineClose } from "react-icons/ai";
@@ -19,8 +19,7 @@ const Timetable = () => {
   useEffect(() => {
     getBranchData();
   }, []);
-
-  const addTimetableHandler = () => {
+  const addTimetableHandler = useCallback(() => {
     toast.loading("Adding Timetable");
     const headers = {
       "Content-Type": "application/json",
@@ -48,8 +47,8 @@ const Timetable = () => {
         toast.dismiss();
         toast.error(error.response.data.message);
       });
-  };
-  
+  }, []);
+
   useEffect(() => {
     const uploadFileToStorage = async (file) => {
       toast.loading("Upload Timetable To Server");
