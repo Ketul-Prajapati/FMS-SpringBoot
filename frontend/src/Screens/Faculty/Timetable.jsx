@@ -48,7 +48,7 @@ const Timetable = () => {
       );
     };
     file && uploadFileToStorage(file);
-  }, [file]);
+  }, [file,addTimetableHandler,addselected]);
 
   const getBranchData = () => {
     const headers = {

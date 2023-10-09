@@ -31,7 +31,7 @@ const Marks = () => {
         toast.dismiss();
         toast.error(error.response.data.message);
       });
-  }, []);
+  }, [userData.enrollmentNo]);
 
   return (
     <div className="w-[85%] mx-auto mt-10 flex justify-center items-start flex-col mb-10">
