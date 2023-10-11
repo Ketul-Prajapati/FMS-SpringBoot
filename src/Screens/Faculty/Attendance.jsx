@@ -20,6 +20,8 @@ function Attendance() {
             <option value="2">BE-II</option>
             <option value="3">BE-III</option>
             <option value="4">BE-IV</option>
+            <option value="4">MCA-I</option>
+            <option value="4">MCA-IIx</option>
           </select>
         </div>
       </div>
