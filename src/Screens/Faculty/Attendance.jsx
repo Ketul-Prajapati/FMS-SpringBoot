@@ -21,7 +21,7 @@ function Attendance() {
             <option value="3">BE-III</option>
             <option value="4">BE-IV</option>
             <option value="4">MCA-I</option>
-            <option value="4">MCA-IIx</option>
+            <option value="4">MCA-II</option>
           </select>
         </div>
       </div>
