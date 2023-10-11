@@ -115,7 +115,7 @@ const Attendance = () => {
             id="branch"
             className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
           >
-            <option defaultValue>-- Select Class --</option>
+            <option defaultValue>-- Select Semester --</option>
             <option value="1">BE-1</option>
             <option value="2">BE-2</option>
             <option value="3">BE-3</option>
