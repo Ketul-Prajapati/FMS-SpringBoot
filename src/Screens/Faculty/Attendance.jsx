@@ -7,7 +7,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import toast from "react-hot-toast";
 import { storage } from "../../firebase/config";
 import { baseApiURL } from "../../baseUrl";
-const Attendance = () => {
+const Timetable = () => {
   const [addselected, setAddSelected] = useState({
     branch: "",
     semester: "",
@@ -105,7 +105,25 @@ const Attendance = () => {
       </div>
       <div className="w-full flex justify-evenly items-center mt-12">
         <div className="w-1/2 flex flex-col justify-center items-center">
-          <p className="mb-4 text-xl font-medium">Add Attendance</p>
+          <p className="mb-4 text-xl font-medium">Add Timetable</p>
+          <select
+            id="branch"
+            className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
+            value={addselected.branch}
+            onChange={(e) =>
+              setAddSelected({ ...addselected, branch: e.target.value })
+            }
+          >
+            <option defaultValue>-- Select Branch --</option>
+            {branch &&
+              branch.map((branch) => {
+                return (
+                  <option value={branch.name} key={branch.name}>
+                    {branch.name}
+                  </option>
+                );
+              })}
+          </select>
           <select
             onChange={(e) =>
               setAddSelected({ ...addselected, semester: e.target.value })
@@ -116,11 +134,50 @@ const Attendance = () => {
             className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
           >
             <option defaultValue>-- Select Semester --</option>
-            <option value="1">BE-1</option>
-            <option value="2">BE-2</option>
-            <option value="3">BE-3</option>
-            <option value="4">BE-4</option>
+            <option value="1">1st Semester</option>
+            <option value="2">2nd Semester</option>
+            <option value="3">3rd Semester</option>
+            <option value="4">4th Semester</option>
+            <option value="5">5th Semester</option>
+            <option value="6">6th Semester</option>
+            <option value="7">7th Semester</option>
+            <option value="8">8th Semester</option>
           </select>
+          {!addselected.link && (
+            <label
+              htmlFor="upload"
+              className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] mt-4 flex justify-center items-center cursor-pointer"
+            >
+              Upload Timetable
+              <span className="ml-2">
+                <FiUpload />
+              </span>
+            </label>
+          )}
+          {addselected.link && (
+            <p
+              className="px-2 border-2 border-blue-500 py-2 rounded text-base w-[80%] mt-4 flex justify-center items-center cursor-pointer"
+              onClick={() => setAddSelected({ ...addselected, link: "" })}
+            >
+              Remove Selected Timetable
+              <span className="ml-2">
+                <AiOutlineClose />
+              </span>
+            </p>
+          )}
+          <input
+            type="file"
+            name="upload"
+            id="upload"
+            hidden
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          <button
+            className="bg-blue-500 text-white mt-8 px-4 py-2 rounded-sm"
+            onClick={addTimetableHandler}
+          >
+            Add Timetable
+          </button>
         </div>
       </div>
     </div>
