@@ -95,7 +95,7 @@ const Home = () => {
               }`}
               onClick={() => setSelectedMenu("Attendance")}
             >
-              Attendance
+              Attendance-System
             </li>
           </ul>
           <>
