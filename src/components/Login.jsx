@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { baseApiURL } from "../baseUrl";
 const Login = () => {
   const navigate = useNavigate();
-  const [selected, setSelected] = useState("Student");
+  const [selected, setSelected] = useState("Admin");
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
