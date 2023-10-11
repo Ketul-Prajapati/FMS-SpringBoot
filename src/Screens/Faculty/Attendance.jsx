@@ -4,7 +4,7 @@ import Heading from "../../components/Heading";
 import axios from "axios";
 import { baseApiURL } from "../../baseUrl";
 import { FiSearch } from "react-icons/fi";
-const Student = () => {
+const Attendance = () => {
     const [search, setSearch] = useState();
     const [data, setData] = useState({
         enrollmentNo: "",
