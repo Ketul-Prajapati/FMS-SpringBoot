@@ -11,35 +11,34 @@ const Attendance = () => {
         class: "",
         link: "",
     });
-    const addAttendanceHandler = useCallback(() => {
-        toast.loading("Adding Attendance");
-        const headers = {
-            "Content-Type": "application/json",
-        };
-        axios
-            .post(`${baseApiURL()}/Attendance/addAttendance`, addselected, {
-                headers: headers,
-            })
-            .then((response) => {
-                toast.dismiss();
-                if (response.data.success) {
-                    toast.success(response.data.message);
-                    setAddSelected({
-                        branch: "",
-                        class: "",
-                        link: "",
-                    });
-                    setFile("");
-                } else {
-                    console.log(response);
-                    toast.error(response.data.message);
-                }
-            })
-            .catch((error) => {
-                toast.dismiss();
-                toast.error(error.response.data.message);
-            });
-    }, [addselected]);
+    // const addAttendanceHandler = useCallback(() => {
+    //     toast.loading("Adding Attendance");
+    //     const headers = {
+    //         "Content-Type": "application/json",
+    //     };
+    //     axios
+    //         .post(`${baseApiURL()}/Attendance/addAttendance`, addselected, {
+    //             headers: headers,
+    //         })
+    //         .then((response) => {
+    //             toast.dismiss();
+    //             if (response.data.success) {
+    //                 toast.success(response.data.message);
+    //                 setAddSelected({
+    //                     branch: "",
+    //                     class: "",
+    //                     link: "",
+    //                 });
+    //             } else {
+    //                 console.log(response);
+    //                 toast.error(response.data.message);
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             toast.dismiss();
+    //             toast.error(error.response.data.message);
+    //         });
+    // }, [addselected]);
 
 
     return (
