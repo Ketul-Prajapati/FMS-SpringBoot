@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { baseApiURL } from "../baseUrl";
 const Login = () => {
   const navigate = useNavigate();
-  const [selected, setSelected] = useState("Admin");
+  const [selected, setSelected] = useState("Ad");
   const { register, handleSubmit } = useForm();
 
   const onSubmit = (data) => {
@@ -39,7 +39,7 @@ const Login = () => {
           className="mx-auto mb-6 w-40 z-10"
           src="https://upload.wikimedia.org/wikipedia/en/b/bf/Msu_baroda_logo.png"
           alt="CSConnect"
-        />
+          />
         <h2 className="text-3xl font-semibold mb-6 flex items-center justify-center">{selected} Login</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
@@ -75,7 +75,7 @@ const Login = () => {
         </form>
         <div className="mt-4 flex justify-center">
           <button
-            className={`text-blue-500 font-semibold hover:text-blue-700 transition duration-300 ease-in-out ${selected === "Admin" && "border-b-2 border-blue-500"
+            className={`mr-8 text-blue-500 font-semibold hover:text-blue-700 transition duration-300 ease-in-out ${selected === "Admin" && "border-b-2 border-blue-500"
               }`}
             onClick={() => setSelected("Admin")}
           >
@@ -89,7 +89,7 @@ const Login = () => {
             Faculty
           </button>
           <button
-            className={`mr-8 text-blue-500 font-semibold hover:text-blue-700 transition duration-300 ease-in-out ${selected === "Student" && "border-b-2 border-blue-500"
+            className={`text-blue-500 font-semibold hover:text-blue-700 transition duration-300 ease-in-out ${selected === "Student" && "border-b-2 border-blue-500"
               }`}
             onClick={() => setSelected("Student")}
           >
