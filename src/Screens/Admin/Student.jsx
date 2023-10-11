@@ -5,9 +5,9 @@ import axios from "axios";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase/config";
 import { baseApiURL } from "../../baseUrl";
-import { FiSearch, FiUpload } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 const Student = () => {
-  const [file, setFile] = useState();
+  // const [file, setFile] = useState();
   const [selected, setSelected] = useState("add");
   const [branch, setBranch] = useState();
   const [search, setSearch] = useState();
@@ -21,7 +21,7 @@ const Student = () => {
     semester: "",
     branch: "",
     gender: "",
-    profile: "",
+    // profile: "",
   });
   const [id, setId] = useState();
   const getBranchData = () => {
@@ -42,34 +42,34 @@ const Student = () => {
       });
   };
 
-  useEffect(() => {
-    const uploadFileToStorage = async (file) => {
-      toast.loading("Upload Photo To Storage");
-      const storageRef = ref(
-        storage,
-        `Student Profile/${data.branch}/${data.semester} Semester/${data.enrollmentNo}`
-      );
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {},
-        (error) => {
-          console.error(error);
-          toast.dismiss();
-          toast.error("Something Went Wrong!");
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            toast.dismiss();
-            setFile();
-            toast.success("Profile Uploaded To Storage");
-            setData({ ...data, profile: downloadURL });
-          });
-        }
-      );
-    };
-    file && uploadFileToStorage(file);
-  }, [data, file]);
+  // useEffect(() => {
+  //   const uploadFileToStorage = async (file) => {
+  //     toast.loading("Upload Photo To Storage");
+  //     const storageRef = ref(
+  //       storage,
+  //       `Student Profile/${data.branch}/${data.semester} Semester/${data.enrollmentNo}`
+  //     );
+  //     const uploadTask = uploadBytesResumable(storageRef, file);
+  //     uploadTask.on(
+  //       "state_changed",
+  //       (snapshot) => {},
+  //       (error) => {
+  //         console.error(error);
+  //         toast.dismiss();
+  //         toast.error("Something Went Wrong!");
+  //       },
+  //       () => {
+  //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+  //           toast.dismiss();
+  //           // setFile();
+  //           toast.success("Profile Uploaded To Storage");
+  //           setData({ ...data, profile: downloadURL });
+  //         });
+  //       }
+  //     );
+  //   };
+  //   file && uploadFileToStorage(file);
+  // }, [data, file]);
 
   useEffect(() => {
     getBranchData();
@@ -101,7 +101,7 @@ const Student = () => {
               toast.dismiss();
               if (response.data.success) {
                 toast.success(response.data.message);
-                setFile();
+                // setFile();
                 setData({
                   enrollmentNo: "",
                   firstName: "",
@@ -112,7 +112,7 @@ const Student = () => {
                   semester: "",
                   branch: "",
                   gender: "",
-                  profile: "",
+                  // profile: "",
                 });
               } else {
                 toast.error(response.data.message);
@@ -145,7 +145,7 @@ const Student = () => {
         toast.dismiss();
         if (response.data.success) {
           toast.success(response.data.message);
-          setFile("");
+          // setFile("");
           setSearch("");
           setId("");
           setData({
@@ -158,7 +158,7 @@ const Student = () => {
             semester: "",
             branch: "",
             gender: "",
-            profile: "",
+            // profile: "",
           });
         } else {
           toast.error(response.data.message);
@@ -199,7 +199,7 @@ const Student = () => {
               semester: response.data.user[0].semester,
               branch: response.data.user[0].branch,
               gender: response.data.user[0].gender,
-              profile: response.data.user[0].profile,
+              // profile: response.data.user[0].profile,
             });
             setId(response.data.user[0]._id);
           }
@@ -215,7 +215,7 @@ const Student = () => {
 
   const setMenuHandler = (type) => {
     setSelected(type);
-    setFile("");
+    // setFile("");
     setSearch("");
     setId("");
     setData({
@@ -228,7 +228,7 @@ const Student = () => {
       semester: "",
       branch: "",
       gender: "",
-      profile: "",
+      // profile: "",
     });
   };
 
@@ -392,7 +392,7 @@ const Student = () => {
               <option value="Female">Female</option>
             </select>
           </div>
-          <div className="w-[40%]">
+          {/* <div className="w-[40%]">
             <label htmlFor="file" className="leading-7 text-sm ">
               Select Profile
             </label>
@@ -411,7 +411,7 @@ const Student = () => {
               id="file"
               onChange={(e) => setFile(e.target.files[0])}
             />
-          </div>
+          </div> */}
           <button
             type="submit"
             className="bg-blue-500 px-6 py-3 rounded-sm mb-6 text-white"
@@ -584,7 +584,7 @@ const Student = () => {
                   <option value="Female">Female</option>
                 </select>
               </div>
-              <div className="w-[40%]">
+              {/* <div className="w-[40%]">
                 <label htmlFor="file" className="leading-7 text-sm ">
                   Select New Profile
                 </label>
@@ -603,7 +603,7 @@ const Student = () => {
                   id="file"
                   onChange={(e) => setFile(e.target.files[0])}
                 />
-              </div>
+              </div> */}
               <button
                 type="submit"
                 className="bg-blue-500 px-6 py-3 rounded-sm mb-6 text-white"
