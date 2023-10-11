@@ -1,5 +1,6 @@
 
 import React from "react";
+import Heading from "../../components/Heading";
 
     return (
         <div className="w-[85%] mx-auto mt-10 flex justify-center items-start flex-col mb-10">
