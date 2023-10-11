@@ -16,8 +16,7 @@ function Attendance() {
             id="class"
             className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
           >
-            <option defaultValue>-- Select Class --</option>
-            <option value="1">BE-I</option>
+            <option value="1" defaultValue>BE-I</option>
             <option value="2">BE-II</option>
             <option value="3">BE-III</option>
             <option value="4">BE-IV</option>
