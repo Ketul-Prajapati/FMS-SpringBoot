@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Heading from "../../components/Heading";
 import axios from "axios";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../../firebase/config";
+// import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+// import { storage } from "../../firebase/config";
 import { baseApiURL } from "../../baseUrl";
 import { FiSearch } from "react-icons/fi";
 const Student = () => {
