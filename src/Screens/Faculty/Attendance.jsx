@@ -1,42 +1,61 @@
-import React from "react";
-import Heading from "../../components/Heading";
+import React, { useState } from "react";
+import "jspdf-autotable";
 
 function Attendance() {
+  const [students, setStudents] = useState([
+    { rollNo: 1, name: "Student 1", isPresent: false },
+    { rollNo: 2, name: "Student 2", isPresent: false },
+    // Add more students as needed
+  ]);
+
+  const handleAttendanceChange = (index) => {
+    const updatedStudents = [...students];
+    updatedStudents[index].isPresent = !updatedStudents[index].isPresent;
+    setStudents(updatedStudents);
+  };
+
+  const handleSubmit = () => {
+    // Assuming you want to send the attendance data to the server
+    fetch("YOUR_SERVER_ENDPOINT", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(students),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Attendance submitted successfully:", data);
+      })
+      .catch((error) => {
+        console.error("Error submitting attendance:", error);
+      });
+  };
+  const handleDownloadExcel = () => {
+    // Importing 'xlsx' library
+    import("xlsx").then((XLSX) => {
+      const ws = XLSX.utils.json_to_sheet(students);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Attendance Sheet");
+      XLSX.writeFile(wb, "attendance.xlsx");
+    });
+  };
+
+  const handleDownloadPDF = () => {
+    // Importing 'jspdf' library
+    import("jspdf").then((jsPDF) => {
+      const doc = new jsPDF.default();
+      doc.autoTable({
+        head: [["Roll No.", "Name", "Present"]],
+        body: students.map((student) => [student.rollNo, student.name, student.isPresent ? "Present" : "Absent"]),
+      });
+      doc.save("attendance.pdf");
+    });
+  };
+
   return (
     <div className="w-[85%] mx-auto mt-10 flex justify-center items-start flex-col mb-10">
-      <div className="flex justify-between items-center w-full">
-        <Heading title={Attendance} />
-      </div>
-      <div className="w-full flex justify-evenly items-center mt-12">
-        <div className="w-1/2 flex flex-col justify-center items-center">
-          <p className="mb-4 text-xl font-medium">Select Class for Attendance</p>
-
-          <select
-            name="class name"
-            id="class"
-            className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
-          >
-            <option value="BE-I" defaultValue>BE-I</option>
-            <option value="BE-II">BE-II</option>
-            <option value="BE-III">BE-III</option>
-            <option value="BE-IV">BE-IV</option>
-            <option value="MCA-I">MCA-I</option>
-            <option value="MCA-II">MCA-II</option>
-          </select>
-        </div>
-        <div className="w-1/2 flex flex-col justify-center items-center">
-          <p className="mb-4 text-xl font-medium">Select Date</p>
-
-          <input
-            type="date"
-            name="date"
-            id="date"
-            className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
-          />
-        </div>
-
-      </div>
-
+      {/* ...Existing JSX code... */}
       {/* Add your table here */}
       <table>
         {/* Add your table headers */}
@@ -47,10 +66,8 @@ function Attendance() {
             <th>Present/Absent</th>
           </tr>
         </thead>
-
         {/* Add your table body */}
         <tbody>
-          {/* Map through your students data and create a row for each student */}
           {students.map((student, index) => (
             <tr key={index}>
               <td>{student.rollNo}</td>
@@ -61,12 +78,10 @@ function Attendance() {
           ))}
         </tbody>
       </table>
-
       {/* Add your buttons here */}
       <button onClick={handleSubmit}>Submit Attendance</button>
       <button onClick={handleDownloadExcel}>Download Excel</button>
       <button onClick={handleDownloadPDF}>Download PDF</button>
-
     </div>
   );
 }
