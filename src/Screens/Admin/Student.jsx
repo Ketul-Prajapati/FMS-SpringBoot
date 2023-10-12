@@ -345,10 +345,10 @@ const Student = () => {
               onChange={(e) => setData({ ...data, class: e.target.value })}
             >
               <option defaultValue>-- Select --</option>
-              <option value="1">BE-I</option>
-              <option value="2">BE-II</option>
-              <option value="3">BE-III</option>
-              <option value="4">BE-IV</option>
+              <option value="BE-I">BE-I</option>
+              <option value="BE-II">BE-II</option>
+              <option value="BE-III">BE-III</option>
+              <option value="BE-IV">BE-IV</option>
             </select>
           </div>
           {/* <div className="w-[40%]">
@@ -532,10 +532,10 @@ const Student = () => {
                   }
                 >
                   <option defaultValue>-- Select --</option>
-                  <option value="1">BE-I</option>
-                  <option value="2">BE-II</option>
-                  <option value="3">BE-III</option>
-                  <option value="4">BE-IV</option>
+                  <option value="BE-I">BE-I</option>
+                  <option value="BE-II">BE-II</option>
+                  <option value="BE-III">BE-III</option>
+                  <option value="BE-IV">BE-IV</option>
                 </select>
               </div>
               {/* <div className="w-[40%]">
