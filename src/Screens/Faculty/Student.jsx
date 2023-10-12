@@ -13,7 +13,7 @@ const Student = () => {
     lastName: "",
     email: "",
     phoneNumber: "",
-    semester: "",
+    class: "",
     // branch: "",
     gender: "",
     profile: "",
@@ -29,7 +29,7 @@ const Student = () => {
       lastName: "",
       email: "",
       phoneNumber: "",
-      semester: "",
+      class: "",
       // branch: "",
       gender: "",
       profile: "",
@@ -59,7 +59,7 @@ const Student = () => {
               lastName: response.data.user[0].lastName,
               email: response.data.user[0].email,
               phoneNumber: response.data.user[0].phoneNumber,
-              semester: response.data.user[0].semester,
+              class: response.data.user[0].class,
               // branch: response.data.user[0].branch,
               gender: response.data.user[0].gender,
               profile: response.data.user[0].profile,
@@ -117,7 +117,7 @@ const Student = () => {
                   Branch: {data.branch}
                 </p> */}
                 <p className="text-lg font-normal mb-2">
-                  Semester: {data.semester}
+                  Class: {data.class}
                 </p>
               </div>
             </div>

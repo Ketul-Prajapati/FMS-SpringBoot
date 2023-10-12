@@ -32,7 +32,7 @@ const Profile = () => {
           dispatch(
             setUserData({
               fullname: `${response.data.user[0].firstName} ${response.data.user[0].middleName} ${response.data.user[0].lastName}`,
-              semester: response.data.user[0].semester,
+              class: response.data.user[0].class,
               enrollmentNo: response.data.user[0].enrollmentNo
             })
           );
@@ -111,7 +111,7 @@ const Profile = () => {
               </p>
               {/* <p className="text-lg font-normal mb-2">Branch: {data.branch}</p> */}
               <p className="text-lg font-normal mb-2">
-                Semester: {data.semester}
+                Class: {data.class}
               </p>
               <p className="text-lg font-normal mb-2">
                 Phone Number: +91 {data.phoneNumber}

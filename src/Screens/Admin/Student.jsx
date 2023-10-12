@@ -18,7 +18,7 @@ const Student = () => {
     lastName: "",
     email: "",
     phoneNumber: "",
-    semester: "",
+    class: "",
     // branch: "",
     gender: "",
     // profile: "",
@@ -47,7 +47,7 @@ const Student = () => {
   //     toast.loading("Upload Photo To Storage");
   //     const storageRef = ref(
   //       storage,
-  //       `Student Profile/${data.branch}/${data.semester} Semester/${data.enrollmentNo}`
+  //       `Student Profile/${data.branch}/${data.class} Class/${data.enrollmentNo}`
   //     );
   //     const uploadTask = uploadBytesResumable(storageRef, file);
   //     uploadTask.on(
@@ -109,7 +109,7 @@ const Student = () => {
                   lastName: "",
                   email: "",
                   phoneNumber: "",
-                  semester: "",
+                  class: "",
                   // branch: "",
                   gender: "",
                   // profile: "",
@@ -155,7 +155,7 @@ const Student = () => {
             lastName: "",
             email: "",
             phoneNumber: "",
-            semester: "",
+            class: "",
             // branch: "",
             gender: "",
             // profile: "",
@@ -196,7 +196,7 @@ const Student = () => {
               lastName: response.data.user[0].lastName,
               email: response.data.user[0].email,
               phoneNumber: response.data.user[0].phoneNumber,
-              semester: response.data.user[0].semester,
+              class: response.data.user[0].class,
               // branch: response.data.user[0].branch,
               gender: response.data.user[0].gender,
               // profile: response.data.user[0].profile,
@@ -225,7 +225,7 @@ const Student = () => {
       lastName: "",
       email: "",
       phoneNumber: "",
-      semester: "",
+      class: "",
       // branch: "",
       gender: "",
       // profile: "",
@@ -238,17 +238,15 @@ const Student = () => {
         <Heading title="Student Details" />
         <div className="flex justify-end items-center w-full">
           <button
-            className={`${
-              selected === "add" && "border-b-2 "
-            }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
+            className={`${selected === "add" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
             onClick={() => setMenuHandler("add")}
           >
             Add Student
           </button>
           <button
-            className={`${
-              selected === "edit" && "border-b-2 "
-            }border-blue-500 px-4 py-2 text-black rounded-sm`}
+            className={`${selected === "edit" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm`}
             onClick={() => setMenuHandler("edit")}
           >
             Edit Student
@@ -337,24 +335,20 @@ const Student = () => {
             />
           </div>
           <div className="w-[40%]">
-            <label htmlFor="semester" className="leading-7 text-sm ">
-              Select Semester
+            <label htmlFor="class" className="leading-7 text-sm ">
+              Select Class
             </label>
             <select
-              id="semester"
+              id="class"
               className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
-              value={data.semester}
-              onChange={(e) => setData({ ...data, semester: e.target.value })}
+              value={data.class}
+              onChange={(e) => setData({ ...data, class: e.target.value })}
             >
               <option defaultValue>-- Select --</option>
-              <option value="1">1st Semester</option>
-              <option value="2">2nd Semester</option>
-              <option value="3">3rd Semester</option>
-              <option value="4">4th Semester</option>
-              <option value="5">5th Semester</option>
-              <option value="6">6th Semester</option>
-              <option value="7">7th Semester</option>
-              <option value="8">8th Semester</option>
+              <option value="1">BE-I</option>
+              <option value="2">BE-II</option>
+              <option value="3">BE-III</option>
+              <option value="4">BE-IV</option>
             </select>
           </div>
           {/* <div className="w-[40%]">
@@ -526,27 +520,23 @@ const Student = () => {
                 />
               </div>
               <div className="w-[40%]">
-                <label htmlFor="semester" className="leading-7 text-sm ">
-                  Semester
+                <label htmlFor="class" className="leading-7 text-sm ">
+                  Class
                 </label>
                 <select
                   disabled
-                  id="semester"
+                  id="class"
                   className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
-                  value={data.semester}
+                  value={data.class}
                   onChange={(e) =>
-                    setData({ ...data, semester: e.target.value })
+                    setData({ ...data, class: e.target.value })
                   }
                 >
                   <option defaultValue>-- Select --</option>
-                  <option value="1">1st Semester</option>
-                  <option value="2">2nd Semester</option>
-                  <option value="3">3rd Semester</option>
-                  <option value="4">4th Semester</option>
-                  <option value="5">5th Semester</option>
-                  <option value="6">6th Semester</option>
-                  <option value="7">7th Semester</option>
-                  <option value="8">8th Semester</option>
+                  <option value="1">BE-I</option>
+                  <option value="2">BE-II</option>
+                  <option value="3">BE-III</option>
+                  <option value="4">BE-IV</option>
                 </select>
               </div>
               {/* <div className="w-[40%]">
