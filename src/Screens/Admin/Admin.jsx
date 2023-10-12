@@ -489,7 +489,7 @@ const Admin = () => {
               </div>
               <button
                 type="submit"
-                className="bg-blue-500 px-6 py-3 rounded-sm mb-6 text-white"
+                className="bg-blue-500 flex px-6 py-3 rounded-sm mb-6 text-white"
               >
                 Update Admin
               </button>
