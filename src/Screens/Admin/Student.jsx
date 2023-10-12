@@ -524,7 +524,6 @@ const Student = () => {
                   Class
                 </label>
                 <select
-                  disabled
                   id="class"
                   className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
                   value={data.class}
