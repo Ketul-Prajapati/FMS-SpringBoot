@@ -100,12 +100,12 @@ const Home = () => {
           </ul>
           <>
             {selectedMenu === "Timetable" && <Timetable />}
+            {selectedMenu === "Attendance" && <Attendance />}
             {selectedMenu === "Upload Marks" && <Marks />}
             {selectedMenu === "Material" && <Material />}
             {selectedMenu === "Notice" && <Notice />}
             {selectedMenu === "My Profile" && <Profile />}
             {selectedMenu === "Student Info" && <Student />}
-            {selectedMenu === "Attendance" && <Attendance />}
           </>
         </>
       )}
