@@ -23,7 +23,7 @@ const Student = () => {
     gender: "",
     // profile: "",
   });
-  // const [id, setId] = useState();
+  const [id, setId] = useState();
   // const getBranchData = () => {
   //   const headers = {
   //     "Content-Type": "application/json",
