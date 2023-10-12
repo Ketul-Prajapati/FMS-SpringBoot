@@ -349,6 +349,8 @@ const Student = () => {
               <option value="BE-II">BE-II</option>
               <option value="BE-III">BE-III</option>
               <option value="BE-IV">BE-IV</option>
+              <option value="MCA-I">MCA-I</option>
+              <option value="MCA-II">MCA-II</option>
             </select>
           </div>
           {/* <div className="w-[40%]">
@@ -536,6 +538,8 @@ const Student = () => {
                   <option value="BE-II">BE-II</option>
                   <option value="BE-III">BE-III</option>
                   <option value="BE-IV">BE-IV</option>
+                  <option value="MCA-I">MCA-I</option>
+                  <option value="MCA-II">MCA-II</option>
                 </select>
               </div>
               {/* <div className="w-[40%]">
