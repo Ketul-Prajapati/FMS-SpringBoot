@@ -9,7 +9,7 @@ import { FiSearch } from "react-icons/fi";
 const Student = () => {
   // const [file, setFile] = useState();
   const [selected, setSelected] = useState("add");
-  const [branch, setBranch] = useState();
+  // const [branch, setBranch] = useState();
   const [search, setSearch] = useState();
   const [data, setData] = useState({
     enrollmentNo: "",
@@ -19,28 +19,28 @@ const Student = () => {
     email: "",
     phoneNumber: "",
     semester: "",
-    branch: "",
+    // branch: "",
     gender: "",
     // profile: "",
   });
-  const [id, setId] = useState();
-  const getBranchData = () => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .get(`${baseApiURL()}/branch/getBranch`, { headers })
-      .then((response) => {
-        if (response.data.success) {
-          setBranch(response.data.branches);
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  // const [id, setId] = useState();
+  // const getBranchData = () => {
+  //   const headers = {
+  //     "Content-Type": "application/json",
+  //   };
+  //   axios
+  //     .get(`${baseApiURL()}/branch/getBranch`, { headers })
+  //     .then((response) => {
+  //       if (response.data.success) {
+  //         setBranch(response.data.branches);
+  //       } else {
+  //         toast.error(response.data.message);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
 
   // useEffect(() => {
   //   const uploadFileToStorage = async (file) => {
@@ -71,9 +71,9 @@ const Student = () => {
   //   file && uploadFileToStorage(file);
   // }, [data, file]);
 
-  useEffect(() => {
-    getBranchData();
-  }, []);
+  // useEffect(() => {
+  //   getBranchData();
+  // }, []);
 
   const addStudentProfile = (e) => {
     e.preventDefault();
@@ -110,7 +110,7 @@ const Student = () => {
                   email: "",
                   phoneNumber: "",
                   semester: "",
-                  branch: "",
+                  // branch: "",
                   gender: "",
                   // profile: "",
                 });
@@ -156,7 +156,7 @@ const Student = () => {
             email: "",
             phoneNumber: "",
             semester: "",
-            branch: "",
+            // branch: "",
             gender: "",
             // profile: "",
           });
@@ -197,7 +197,7 @@ const Student = () => {
               email: response.data.user[0].email,
               phoneNumber: response.data.user[0].phoneNumber,
               semester: response.data.user[0].semester,
-              branch: response.data.user[0].branch,
+              // branch: response.data.user[0].branch,
               gender: response.data.user[0].gender,
               // profile: response.data.user[0].profile,
             });
@@ -226,7 +226,7 @@ const Student = () => {
       email: "",
       phoneNumber: "",
       semester: "",
-      branch: "",
+      // branch: "",
       gender: "",
       // profile: "",
     });
@@ -357,7 +357,7 @@ const Student = () => {
               <option value="8">8th Semester</option>
             </select>
           </div>
-          <div className="w-[40%]">
+          {/* <div className="w-[40%]">
             <label htmlFor="branch" className="leading-7 text-sm ">
               Select Branch
             </label>
@@ -376,7 +376,7 @@ const Student = () => {
                 );
               })}
             </select>
-          </div>
+          </div> */}
           <div className="w-[40%]">
             <label htmlFor="gender" className="leading-7 text-sm ">
               Select Gender
@@ -549,7 +549,7 @@ const Student = () => {
                   <option value="8">8th Semester</option>
                 </select>
               </div>
-              <div className="w-[40%]">
+              {/* <div className="w-[40%]">
                 <label htmlFor="branch" className="leading-7 text-sm ">
                   Branch
                 </label>
@@ -569,7 +569,7 @@ const Student = () => {
                     );
                   })}
                 </select>
-              </div>
+              </div> */}
               <div className="w-[40%]">
                 <label htmlFor="gender" className="leading-7 text-sm ">
                   Select Gender

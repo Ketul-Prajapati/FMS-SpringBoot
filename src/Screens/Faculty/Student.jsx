@@ -14,7 +14,7 @@ const Student = () => {
     email: "",
     phoneNumber: "",
     semester: "",
-    branch: "",
+    // branch: "",
     gender: "",
     profile: "",
   });
@@ -30,7 +30,7 @@ const Student = () => {
       email: "",
       phoneNumber: "",
       semester: "",
-      branch: "",
+      // branch: "",
       gender: "",
       profile: "",
     });
@@ -60,7 +60,7 @@ const Student = () => {
               email: response.data.user[0].email,
               phoneNumber: response.data.user[0].phoneNumber,
               semester: response.data.user[0].semester,
-              branch: response.data.user[0].branch,
+              // branch: response.data.user[0].branch,
               gender: response.data.user[0].gender,
               profile: response.data.user[0].profile,
             });
@@ -113,18 +113,18 @@ const Student = () => {
                 <p className="text-lg font-normal mb-2">
                   Email Address: {data.email}
                 </p>
-                <p className="text-lg font-normal mb-2">
+                {/* <p className="text-lg font-normal mb-2">
                   Branch: {data.branch}
-                </p>
+                </p> */}
                 <p className="text-lg font-normal mb-2">
                   Semester: {data.semester}
                 </p>
               </div>
             </div>
             <img
-              src={data.profile}
+              src={`https://admission.msubaroda.ac.in/MSUISApi/Upload/Photo/${data.enrollmentNo}_photo.jpg`}
               alt="student profile"
-              className="h-[200px] w-[200px] object-cover rounded-lg shadow-md"
+              className="h-[15%] w-[15%] object-cover rounded-lg shadow-md"
             />
           </div>
         )}

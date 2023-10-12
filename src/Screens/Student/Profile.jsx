@@ -33,8 +33,7 @@ const Profile = () => {
             setUserData({
               fullname: `${response.data.user[0].firstName} ${response.data.user[0].middleName} ${response.data.user[0].lastName}`,
               semester: response.data.user[0].semester,
-              enrollmentNo: response.data.user[0].enrollmentNo,
-              branch: response.data.user[0].branch,
+              enrollmentNo: response.data.user[0].enrollmentNo
             })
           );
         } else {
@@ -110,7 +109,7 @@ const Profile = () => {
               <p className="text-lg font-normal mb-2">
                 Enrollment No: {data.enrollmentNo}
               </p>
-              <p className="text-lg font-normal mb-2">Branch: {data.branch}</p>
+              {/* <p className="text-lg font-normal mb-2">Branch: {data.branch}</p> */}
               <p className="text-lg font-normal mb-2">
                 Semester: {data.semester}
               </p>
@@ -164,10 +163,10 @@ const Profile = () => {
           </div>
 
           <img
-            src={data.profile}
-            alt="student profile"
-            className="h-[200px] w-[200px] object-cover rounded-lg shadow-md"
-          />
+              src={`https://admission.msubaroda.ac.in/MSUISApi/Upload/Photo/${data.enrollmentNo}_photo.jpg`}
+              alt="student profile"
+              className="h-[15%] w-[15%] object-cover rounded-lg shadow-md"
+            />
         </>
       )}
     </div>
