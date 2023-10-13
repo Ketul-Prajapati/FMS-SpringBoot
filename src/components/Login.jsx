@@ -98,11 +98,7 @@ const Login = () => {
         </div>
         <div className="text-center mt-6">
           <p className="text-gray-600 text-sm">
-            Made with {" "}
-            <span role="img" aria-label="heart">
-              ❤️
-            </span>{" "}
-            by Himil, Ketul, Preet, and Manav
+            Developed by <a href="https://csproconnectdevelopers.onrender.com">Students</a>
           </p>
         </div>
       </div>
