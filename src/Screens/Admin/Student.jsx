@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import Heading from "../../components/Heading";
 import axios from "axios";
 
+
 const Student = () => {
   // const [file, setFile] = useState();
 const mailgun = require('mailgun.js');
@@ -109,16 +110,15 @@ const mg = mailgun({ apiKey: process.env.MAILGUN_API, domain: DOMAIN });
           if (response.data.success) {
             toast.success(response.data.message);
             const password = generateRandomPassword(); // Implement this function
-            const sendData = {
-              from: "CSProConnect Admin <admin@csproconnect.me>",
+            mg.messages.create('csproconnect.me', {
+              from: 'CSProConnect Admin <admin@csproconnect.me>',
               to: data.email,
               subject: "Welcome to CSProConnect",
               template: "successful registration",
               'h:X-Mailgun-Variables': { loginid: data.enrollmentNo,password }
-            };
-            mg.messages().send(sendData, function (error, body) {
-              console.log(body);
-            });
+            })
+              .then(msg => console.log(msg)) // logs response data
+              .catch(err => console.log(err));
             axios
               .post(
                 `${baseApiURL()}/student/auth/register`,
