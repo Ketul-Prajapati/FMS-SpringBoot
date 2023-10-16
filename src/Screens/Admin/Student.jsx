@@ -93,10 +93,6 @@ const mg = mailgun({ apiKey: process.env.MAILGUN_API, domain: DOMAIN });
     return pass;
   }
 
-  function sendLoginCredentials(email, loginId, password, recepient) {
-    // Compose the email message
-    const subject = "Your CSProConnect Student Account has been successfully registered";
-    // const text = Your login ID: ${loginId}\nYour password: ${password};
 
     const addStudentProfile = (e) => {
       e.preventDefault();
