@@ -641,5 +641,4 @@ const mg = mailgun({ apiKey: process.env.MAILGUN_API, domain: DOMAIN });
       </div>
     );
   };
-}
   export default Student;
