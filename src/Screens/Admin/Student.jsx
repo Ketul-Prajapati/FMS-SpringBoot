@@ -114,7 +114,7 @@ const mg = mailgun({ apiKey: process.env.MAILGUN_API, domain: DOMAIN });
               to: data.email,
               subject: "Welcome to CSProConnect",
               template: "successful registration",
-              'h:X-Mailgun-Variables': { loginid,password }
+              'h:X-Mailgun-Variables': { loginid: data.enrollmentNo,password }
             };
             mg.messages().send(sendData, function (error, body) {
               console.log(body);
