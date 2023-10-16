@@ -121,7 +121,7 @@ const mg = mailgun({ apiKey: process.env.MAILGUN_API, domain: DOMAIN });
               template: "successful registration",
               'h:X-Mailgun-Variables': { test: "test" }
             };
-            mg.messages().send(data, function (error, body) {
+            mg.messages().send(sendData, function (error, body) {
               console.log(body);
             });
             axios
