@@ -4,11 +4,11 @@ import { FiSearch } from "react-icons/fi";
 import toast from "react-hot-toast";
 import Heading from "../../components/Heading";
 import axios from "axios";
+const mailgun = require('mailgun.js');
 
 
 const Student = () => {
   // const [file, setFile] = useState();
-const mailgun = require('mailgun.js');
 const DOMAIN = 'csproconnect.me';
 const mg = mailgun({ apiKey: process.env.MAILGUN_API, domain: DOMAIN });
   const [selected, setSelected] = useState("add");
