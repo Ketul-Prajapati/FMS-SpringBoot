@@ -109,13 +109,12 @@ const mg = mailgun({ apiKey: process.env.MAILGUN_API, domain: DOMAIN });
           if (response.data.success) {
             toast.success(response.data.message);
             const password = generateRandomPassword(); // Implement this function
-            sendLoginCredentials(data.email, data.enrollmentNo, password, data.firstName);
             const sendData = {
               from: "CSProConnect Admin <admin@csproconnect.me>",
               to: data.email,
               subject: "Welcome to CSProConnect",
               template: "successful registration",
-              'h:X-Mailgun-Variables': { test: "test" }
+              'h:X-Mailgun-Variables': { loginid,password }
             };
             mg.messages().send(sendData, function (error, body) {
               console.log(body);
