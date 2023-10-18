@@ -15,11 +15,13 @@ const Login = () => {
       const headers = {
         "Content-Type": "application/json",
       };
+      toast.loading("Logging")
       axios
         .post(`${baseApiURL()}/${selected.toLowerCase()}/auth/login`, data, {
           headers: headers,
         })
         .then((response) => {
+          toast.dismiss();
           navigate(`/${selected.toLowerCase()}`, {
             state: { type: selected, loginid: response.data.loginid },
           });
