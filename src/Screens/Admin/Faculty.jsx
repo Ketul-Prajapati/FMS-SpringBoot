@@ -137,7 +137,7 @@ const Faculty = () => {
           const templateData ={
             // Define variables used in your template
             'recipientName': data.firstName+' '+data.lastName,
-            'username': data.enrollmentNo,
+            'username': data.employeeId,
             'password': password
           };
           sendLoginCredentials(data.email, templateName, templateData); // Implement this function
