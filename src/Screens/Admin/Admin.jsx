@@ -6,6 +6,11 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase/config";
 import { baseApiURL } from "../../baseUrl";
 import { FiSearch, FiUpload } from "react-icons/fi";
+import * as formData from 'form-data';
+import { mailgunApi } from "../../mailgun_api";
+import Mailgun from "mailgun.js";
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({ username: 'api', key: `${mailgunApi()}` });
 
 const Admin = () => {
   const [file, setFile] = useState();
