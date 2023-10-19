@@ -6,11 +6,16 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase/config";
 import { baseApiURL } from "../../baseUrl";
 import { FiSearch, FiUpload } from "react-icons/fi";
+import * as formData from 'form-data';
+import { mailgunApi } from "../../mailgun_api";
+import Mailgun from "mailgun.js";
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({ username: 'api', key: `${mailgunApi()}` });
 
 const Faculty = () => {
   const [file, setFile] = useState();
   const [selected, setSelected] = useState("add");
-  const [branch, setBranch] = useState();
+  // const [branch, setBranch] = useState();
   const [data, setData] = useState({
     employeeId: "",
     firstName: "",
@@ -18,7 +23,7 @@ const Faculty = () => {
     lastName: "",
     email: "",
     phoneNumber: "",
-    department: "",
+    // department: "",
     gender: "",
     experience: "",
     post: "",
@@ -26,23 +31,23 @@ const Faculty = () => {
   });
   const [id, setId] = useState();
   const [search, setSearch] = useState();
-  const getBranchData = () => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .get(`${baseApiURL()}/branch/getBranch`, { headers })
-      .then((response) => {
-        if (response.data.success) {
-          setBranch(response.data.branches);
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  // const getBranchData = () => {
+  //   const headers = {
+  //     "Content-Type": "application/json",
+  //   };
+  //   axios
+  //     .get(`${baseApiURL()}/branch/getBranch`, { headers })
+  //     .then((response) => {
+  //       if (response.data.success) {
+  //         setBranch(response.data.branches);
+  //       } else {
+  //         toast.error(response.data.message);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
 
   useEffect(() => {
     const uploadFileToStorage = async (file) => {
@@ -73,9 +78,45 @@ const Faculty = () => {
     file && uploadFileToStorage(file);
   }, [data, file]);
 
-  useEffect(() => {
-    getBranchData();
-  }, []);
+  // useEffect(() => {
+  //   getBranchData();
+  // }, []);
+
+  function sendMailgunEmail(to, subject, templateName, templateData) {
+    mg.messages.create('csproconnect.me', {
+      from: 'CSProConnect Admin <admin@csproconnect.me>',
+      to: [to],
+      subject: subject,
+      template: templateName, // Use the name of the Mailgun template
+      'h:X-Mailgun-Variables': JSON.stringify(templateData),
+    })
+      .then(msg => console.log(msg)) // logs response data
+      .catch(err => console.log(err)); // logs any error
+  }
+
+
+
+  function generateRandomPassword() {
+    let pass = '';
+    let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+      'abcdefghijklmnopqrstuvwxyz0123456789@#$';
+
+    for (let i = 1; i <= 8; i++) {
+      let char = Math.floor(Math.random()
+        * str.length + 1);
+
+      pass += str.charAt(char)
+    }
+
+    return pass;
+  }
+
+  function sendLoginCredentials(email, templateName, templateData) {
+    // Compose the email message
+    const subject = "Welcome to CSProConnect - Your Account Credentials"
+    // Send the email
+    sendMailgunEmail(email, subject, templateName, templateData);
+  }
 
   const addFacultyProfile = (e) => {
     e.preventDefault();
@@ -91,10 +132,19 @@ const Faculty = () => {
         toast.dismiss();
         if (response.data.success) {
           toast.success(response.data.message);
+          const password = generateRandomPassword();
+          const templateName = 'successful registration'; // Replace with the name of your Mailgun template
+          const templateData ={
+            // Define variables used in your template
+            'recipientName': data.firstName+' '+data.lastName,
+            'username': data.enrollmentNo,
+            'password': password
+          };
+          sendLoginCredentials(data.email, templateName, templateData); // Implement this function
           axios
             .post(
               `${baseApiURL()}/faculty/auth/register`,
-              { loginid: data.employeeId, password: 112233 },
+              { loginid: data.employeeId, password },
               {
                 headers: headers,
               }
@@ -111,7 +161,7 @@ const Faculty = () => {
                   lastName: "",
                   email: "",
                   phoneNumber: "",
-                  department: "",
+                  // department: "",
                   gender: "",
                   experience: "",
                   post: "",
@@ -159,7 +209,7 @@ const Faculty = () => {
             lastName: "",
             email: "",
             phoneNumber: "",
-            department: "",
+            // department: "",
             gender: "",
             experience: "",
             post: "",
@@ -200,7 +250,7 @@ const Faculty = () => {
             email: response.data.user[0].email,
             phoneNumber: response.data.user[0].phoneNumber,
             post: response.data.user[0].post,
-            department: response.data.user[0].department,
+            // department: response.data.user[0].department,
             gender: response.data.user[0].gender,
             profile: response.data.user[0].profile,
             experience: response.data.user[0].experience,
@@ -226,8 +276,8 @@ const Faculty = () => {
       lastName: "",
       email: "",
       phoneNumber: "",
-      semester: "",
-      branch: "",
+      // semester: "",
+      // branch: "",
       gender: "",
       profile: "",
     });
@@ -335,7 +385,7 @@ const Faculty = () => {
               className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
-          <div className="w-[40%]">
+          {/* <div className="w-[40%]">
             <label htmlFor="branch" className="leading-7 text-sm ">
               Select Department
             </label>
@@ -354,7 +404,7 @@ const Faculty = () => {
                 );
               })}
             </select>
-          </div>
+          </div> */}
           <div className="w-[40%]">
             <label htmlFor="post" className="leading-7 text-sm ">
               Enter POST

@@ -56,6 +56,42 @@ const Admin = () => {
     file && uploadFileToStorage(file);
   }, [data, file]);
 
+  function sendMailgunEmail(to, subject, templateName, templateData) {
+    mg.messages.create('csproconnect.me', {
+      from: 'CSProConnect Admin <admin@csproconnect.me>',
+      to: [to],
+      subject: subject,
+      template: templateName, // Use the name of the Mailgun template
+      'h:X-Mailgun-Variables': JSON.stringify(templateData),
+    })
+      .then(msg => console.log(msg)) // logs response data
+      .catch(err => console.log(err)); // logs any error
+  }
+
+
+
+  function generateRandomPassword() {
+    let pass = '';
+    let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+      'abcdefghijklmnopqrstuvwxyz0123456789@#$';
+
+    for (let i = 1; i <= 8; i++) {
+      let char = Math.floor(Math.random()
+        * str.length + 1);
+
+      pass += str.charAt(char)
+    }
+
+    return pass;
+  }
+
+  function sendLoginCredentials(email, templateName, templateData) {
+    // Compose the email message
+    const subject = "Welcome to CSProConnect - Your Account Credentials"
+    // Send the email
+    sendMailgunEmail(email, subject, templateName, templateData);
+  }
+
   const addAdminProfile = (e) => {
     e.preventDefault();
     toast.loading("Adding Admin");
@@ -70,10 +106,32 @@ const Admin = () => {
         toast.dismiss();
         if (response.data.success) {
           toast.success(response.data.message);
+          const password = generateRandomPassword();
+          const templateName = 'successful registration'; // Replace with the name of your Mailgun template
+          const templateData ={
+            // Define variables used in your template
+            'recipientName': data.firstName+' '+data.lastName,
+            'username': data.enrollmentNo,
+            'password': password
+          };
+          sendLoginCredentials(data.email, templateName, templateData); // Implement this function
+          // const mailgun = require("mailgun-js");
+          // const DOMAIN = "csproconnect.me";
+          // const mg = mailgun({ apiKey: "ENTER_API_KEY_HERE", domain: DOMAIN });
+          // const data = {
+          //   from: "Mailgun Sandbox <postmaster@csproconnect.me>",
+          //   to: "himil3002@gmail.com",
+          //   subject: "Hello",
+          //   template: "successful registration",
+          //   'h:X-Mailgun-Variables': { test: "test" }
+          // };
+          // mg.messages().send(data, function (error, body) {
+          //   console.log(body);
+          // });
           axios
             .post(
               `${baseApiURL()}/Admin/auth/register`,
-              { loginid: data.employeeId, password: 112233 },
+              { loginid: data.employeeId, password },
               {
                 headers: headers,
               }
