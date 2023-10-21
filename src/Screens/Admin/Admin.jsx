@@ -32,7 +32,7 @@ const Admin = () => {
       toast.loading("Upload Photo To Storage");
       const storageRef = ref(
         storage,
-        `Admin Profile/${data.department}/${data.employeeId}`
+        `Admin Profile/${data.employeeId}`
       );
       const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(

@@ -1,4 +1,4 @@
-
+require("dotenv").config;
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
@@ -9,8 +9,8 @@ const firebaseConfig = {
     storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_SENDERID,
     appId: process.env.REACT_APP_APPID,
+    measurementId: process.env.REACT_APP_MEASUREMENTID
 };
-
 
 export const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app);

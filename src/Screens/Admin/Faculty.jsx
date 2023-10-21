@@ -54,7 +54,7 @@ const Faculty = () => {
       toast.loading("Upload Photo To Storage");
       const storageRef = ref(
         storage,
-        `Faculty Profile/${data.department}/${data.employeeId}`
+        `Faculty Profile/${data.employeeId}`
       );
       const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(

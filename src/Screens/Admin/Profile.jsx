@@ -53,7 +53,7 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/student/auth/login`,
+        `${baseApiURL()}/admin/auth/login`,
         { loginid: router.state.loginid, password: password.current },
         {
           headers: headers,
@@ -78,7 +78,7 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/student/auth/update/${id}`,
+        `${baseApiURL()}/admin/auth/update/${id}`,
         { loginid: router.state.loginid, password: password.new },
         {
           headers: headers,
@@ -160,7 +160,7 @@ const Profile = () => {
           </div>
           <img
             src={data.profile}
-            alt="student profile"
+            alt="admin profile"
             className="h-[200px] w-[200px] object-cover rounded-lg shadow-md"
           />
         </>

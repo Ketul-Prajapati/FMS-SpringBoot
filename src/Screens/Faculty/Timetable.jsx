@@ -54,7 +54,7 @@ const Timetable = () => {
       toast.loading("Upload Timetable To Server");
       const storageRef = ref(
         storage,
-        `Timetable/${addselected.branch}/Semester ${addselected.semester}`
+        `Timetable/Semester ${addselected.semester}`
       );
       const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(
