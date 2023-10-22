@@ -53,7 +53,6 @@ const Navbar = () => {
     <div className="shadow-md px-6 py-4 flex justify-between items-center">
       <p
         className="font-semibold text-2xl flex justify-center items-center cursor-pointer"
-        onClick={() => navigate("/")}
       >
         <span className="mr-2">
           <RxDashboard />

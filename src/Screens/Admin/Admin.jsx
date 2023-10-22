@@ -6,6 +6,9 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase/config";
 import { baseApiURL } from "../../baseUrl";
 import { FiSearch, FiUpload } from "react-icons/fi";
+import { FaFilePdf, FaFileExcel } from "react-icons/fa";
+import "jspdf-autotable";
+import * as XLSX from "xlsx";
 import * as formData from 'form-data';
 import { mailgunApi } from "../../mailgun_api";
 import Mailgun from "mailgun.js";
@@ -14,6 +17,7 @@ const mg = mailgun.client({ username: 'api', key: `${mailgunApi()}` });
 
 const Admin = () => {
   const [file, setFile] = useState();
+  const [admin, setAdmin] = useState([]);
   const [selected, setSelected] = useState("add");
   const [data, setData] = useState({
     employeeId: "",
@@ -206,6 +210,41 @@ const Admin = () => {
       });
   };
 
+  const handleDownloadExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([
+      ["SR NO", "Employee Id", "Name"],
+      ...admin.map((admin, index) => [index + 1,
+      admin.employeeId,
+      `${admin.lastName} ${admin.firstName} ${admin.middleName}`,
+      ]),
+    ]);
+
+    XLSX.utils.book_append_sheet(wb, ws, "Admin Sheet");
+    XLSX.writeFile(wb, `Admin_List.xlsx`);
+  };
+
+  const handleDownloadPDF = () => {
+    // Importing 'jspdf' library
+    import("jspdf").then((jsPDF) => {
+      const doc = new jsPDF.default();
+      doc.setFont("arial"); // Set font type
+      doc.setFontSize(15); // Set font size
+      const pdfTitle = `LIST OF ADMINS`;
+      doc.text(pdfTitle, 60, 10);
+      const columns = ["SR NO", "EMPLOYEE ID", "NAME"];
+      const rows = admin.map((admin, index) => [
+        index + 1, admin.employeeId,
+        `${admin.lastName} ${admin.firstName} ${admin.middleName}`,
+      ]);
+      doc.autoTable({
+        head: [columns],
+        body: rows,
+      });
+      doc.save(`Admin_List.pdf`);
+    });
+  }
+
   const searchAdminHandler = (e) => {
     e.preventDefault();
     toast.loading("Getting Admin");
@@ -247,6 +286,37 @@ const Admin = () => {
         console.error(error);
       });
   };
+
+  const viewAdminHandler = (e) => {
+    toast.loading("Getting admin list");
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .post(
+        `${baseApiURL()}/admin/details/getDetails`, { __v: 0 },
+        { headers }
+      )
+      .then((response) => {
+        toast.dismiss();
+        console.log(response.data)
+        if (response.data.success) {
+          if (response.data.user.length === 0) {
+            toast.error("No Admin Found!");
+          } else {
+            toast.success(response.data.message);
+            setAdmin(response.data.user);
+          }
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+        console.error(error);
+      });
+  };
+
   const setMenuHandler = (type) => {
     setSelected(type);
     setFile("");
@@ -270,20 +340,25 @@ const Admin = () => {
         <Heading title="Admin Details" />
         <div className="flex justify-end items-center w-full">
           <button
-            className={`${
-              selected === "add" && "border-b-2 "
-            }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
+            className={`${selected === "add" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
             onClick={() => setMenuHandler("add")}
           >
             Add Admin
           </button>
           <button
-            className={`${
-              selected === "edit" && "border-b-2 "
-            }border-blue-500 px-4 py-2 text-black rounded-sm`}
+            className={`${selected === "edit" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
             onClick={() => setMenuHandler("edit")}
           >
             Edit Admin
+          </button>
+          <button
+            className={`${selected === "view" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm`}
+            onClick={() => { setMenuHandler("view"); viewAdminHandler() }}
+          >
+            View Admin
           </button>
         </div>
       </div>
@@ -558,6 +633,60 @@ const Admin = () => {
               </button>
             </form>
           )}
+        </div>
+      )}
+      {selected === "view" && (
+        <div className="mt-8 w-full">
+          <div className="border border-blue-200 shadow-lg rounded-lg mb-4">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-blue-300">
+                  <th className="py-2 px-4 border border-blue-700">SR NO</th>
+                  <th className="py-2 px-4 border border-blue-700">Employee Id</th>
+                  <th className="py-2 px-4 border border-blue-700">Name</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {admin.sort((a, b) => {
+                  const lastNameCompare = a.lastName.localeCompare(b.lastName);
+                  if (lastNameCompare !== 0) {
+                    return lastNameCompare;
+                  }
+                  return a.firstName.localeCompare(b.firstName);
+                }).map((item, index) => (
+                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{index + 1}</td>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{item.employeeId}</td>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{`${item.lastName} ${item.firstName} ${item.middleName}`}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-center space-x-4 mt-12">
+            <>
+              <button
+                className="px-4 py-2 mr-8 text-xl flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                onClick={handleDownloadExcel}
+              >
+                Download Excel
+                <span className="ml-2">
+                  <FaFileExcel />
+                </span>
+              </button>
+
+              <button
+                className="px-4 py-2 ml-8 text-xl flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                onClick={handleDownloadPDF}
+              >
+                Download PDF
+                <span className="ml-2">
+                  <FaFilePdf />
+                </span>
+              </button>
+            </>
+          </div>
         </div>
       )}
     </div>

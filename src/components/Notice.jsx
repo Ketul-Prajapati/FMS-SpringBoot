@@ -179,7 +179,7 @@ const Notice = () => {
   };
 
   return (
-    <div className="w-[85%] mx-auto flex justify-center items-start flex-col my-10">
+    <div className="w-[85%] mx-auto flex justify-center items-center flex-col my-10">
       <div className="relative flex justify-between items-center w-full">
         <Heading title="Notices" />
         {(router.pathname === "/faculty" || router.pathname === "/admin") &&
@@ -268,7 +268,7 @@ const Notice = () => {
         </div>
       )}
       {open && (
-        <form className="mt-8 w-full">
+        <form className="mt-8 w-full flex flex-col justify-center items-center">
           <div className="w-[40%] mt-2">
             <label htmlFor="title">Notice Title</label>
             <input
@@ -303,7 +303,7 @@ const Notice = () => {
             />
           </div>
           <div className="w-[40%] mt-4">
-            <label htmlFor="type">Type Of Notice</label>
+            <label htmlFor="type" className="mr-3">Type Of Notice</label>
             <select
               id="type"
               className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
