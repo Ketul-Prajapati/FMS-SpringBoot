@@ -9,11 +9,15 @@ import { FiSearch, FiUpload } from "react-icons/fi";
 import * as formData from 'form-data';
 import { mailgunApi } from "../../mailgun_api";
 import Mailgun from "mailgun.js";
+import { FaFilePdf, FaFileExcel } from "react-icons/fa";
+import "jspdf-autotable";
+import * as XLSX from "xlsx";
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({ username: 'api', key: `${mailgunApi()}` });
 
 const Faculty = () => {
   const [file, setFile] = useState();
+  const [faculty, setFaculty] = useState([]);
   const [selected, setSelected] = useState("add");
   // const [branch, setBranch] = useState();
   const [data, setData] = useState({
@@ -81,6 +85,41 @@ const Faculty = () => {
   // useEffect(() => {
   //   getBranchData();
   // }, []);
+
+  const handleDownloadExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([
+      ["SR NO", "Employee Id", "Name"],
+      ...faculty.map((faculty, index) => [index + 1,
+      faculty.employeeId,
+      `${faculty.lastName} ${faculty.firstName} ${faculty.middleName}`,
+      ]),
+    ]);
+
+    XLSX.utils.book_append_sheet(wb, ws, "Faculty Sheet");
+    XLSX.writeFile(wb, `Faculty_List.xlsx`);
+  };
+
+  const handleDownloadPDF = () => {
+    // Importing 'jspdf' library
+    import("jspdf").then((jsPDF) => {
+      const doc = new jsPDF.default();
+      doc.setFont("arial"); // Set font type
+      doc.setFontSize(15); // Set font size
+      const pdfTitle = `LIST OF FACULTY`;
+      doc.text(pdfTitle, 60, 10);
+      const columns = ["SR NO", "EMPLOYEE ID", "NAME"];
+      const rows = faculty.map((faculty, index) => [
+        index + 1, faculty.employeeId,
+        `${faculty.lastName} ${faculty.firstName} ${faculty.middleName}`,
+      ]);
+      doc.autoTable({
+        head: [columns],
+        body: rows,
+      });
+      doc.save(`Faculty_List.pdf`);
+    });
+  };
 
   function sendMailgunEmail(to, subject, templateName, templateData) {
     mg.messages.create('csproconnect.me', {
@@ -264,21 +303,53 @@ const Faculty = () => {
         console.error(error);
       });
   };
+
+  const viewFacultyHandler = (e) => {
+    toast.loading("Getting faculty list");
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .post(
+        `${baseApiURL()}/faculty/details/getDetails`, { __v: 0 },
+        { headers }
+      )
+      .then((response) => {
+        toast.dismiss();
+        console.log(response.data)
+        if (response.data.success) {
+          if (response.data.user.length === 0) {
+            toast.error("No Faculty Found!");
+          } else {
+            toast.success(response.data.message);
+            setFaculty(response.data.user);
+          }
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+        console.error(error);
+      });
+  };
+
   const setMenuHandler = (type) => {
     setSelected(type);
     setFile("");
     setSearch("");
     setId("");
     setData({
-      enrollmentNo: "",
+      employeeId: "",
       firstName: "",
       middleName: "",
       lastName: "",
       email: "",
       phoneNumber: "",
-      // semester: "",
-      // branch: "",
+      // department: "",
       gender: "",
+      experience: "",
+      post: "",
       profile: "",
     });
   };
@@ -289,27 +360,32 @@ const Faculty = () => {
         <Heading title="Faculty Details" />
         <div className="flex justify-end items-center w-full">
           <button
-            className={`${
-              selected === "add" && "border-b-2 "
-            }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
+            className={`${selected === "add" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
             onClick={() => setMenuHandler("add")}
           >
             Add Faculty
           </button>
           <button
-            className={`${
-              selected === "edit" && "border-b-2 "
-            }border-blue-500 px-4 py-2 text-black rounded-sm`}
+            className={`${selected === "edit" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
             onClick={() => setMenuHandler("edit")}
           >
             Edit Faculty
+          </button>
+          <button
+            className={`${selected === "view" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm`}
+            onClick={() => { setMenuHandler("view"); viewFacultyHandler() }}
+          >
+            View Faculty
           </button>
         </div>
       </div>
       {selected === "add" && (
         <form
           onSubmit={addFacultyProfile}
-          className="w-[70%] flex justify-center items-center flex-wrap gap-6 mx-auto mt-10"
+          className="w-[70%] flex justify-center items-center flex-wrap gap-8 mx-auto mt-10"
         >
           <div className="w-[40%]">
             <label htmlFor="firstname" className="leading-7 text-sm ">
@@ -385,26 +461,6 @@ const Faculty = () => {
               className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
-          {/* <div className="w-[40%]">
-            <label htmlFor="branch" className="leading-7 text-sm ">
-              Select Department
-            </label>
-            <select
-              id="branch"
-              className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
-              value={data.department}
-              onChange={(e) => setData({ ...data, department: e.target.value })}
-            >
-              <option defaultValue>-- Select --</option>
-              {branch?.map((branch) => {
-                return (
-                  <option value={branch.name} key={branch.name}>
-                    {branch.name}
-                  </option>
-                );
-              })}
-            </select>
-          </div> */}
           <div className="w-[40%]">
             <label htmlFor="post" className="leading-7 text-sm ">
               Enter POST
@@ -417,56 +473,54 @@ const Faculty = () => {
               className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
-          <div className="w-[95%] flex justify-evenly items-center">
-            <div className="w-[25%]">
-              <label htmlFor="gender" className="leading-7 text-sm ">
-                Select Gender
-              </label>
-              <select
-                id="gender"
-                className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
-                value={data.gender}
-                onChange={(e) => setData({ ...data, gender: e.target.value })}
-              >
-                <option defaultValue>-- Select --</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-            <div className="w-[25%]">
-              <label htmlFor="experience" className="leading-7 text-sm ">
-                Enter Experience
-              </label>
-              <input
-                type="number"
-                id="experience"
-                value={data.experience}
-                onChange={(e) =>
-                  setData({ ...data, experience: e.target.value })
-                }
-                className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              />
-            </div>
-            <div className="w-[25%]">
-              <label htmlFor="file" className="leading-7 text-sm ">
-                Select Profile
-              </label>
-              <label
-                htmlFor="file"
-                className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full flex justify-center items-center cursor-pointer"
-              >
-                Upload
-                <span className="ml-2">
-                  <FiUpload />
-                </span>
-              </label>
-              <input
-                hidden
-                type="file"
-                id="file"
-                onChange={(e) => setFile(e.target.files[0])}
-              />
-            </div>
+          <div className="w-[40%]">
+            <label htmlFor="gender" className="leading-7 text-sm ">
+              Select Gender
+            </label>
+            <select
+              id="gender"
+              className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
+              value={data.gender}
+              onChange={(e) => setData({ ...data, gender: e.target.value })}
+            >
+              <option defaultValue>-- Select --</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <div className="w-[40%]">
+            <label htmlFor="experience" className="leading-7 text-sm ">
+              Enter Experience
+            </label>
+            <input
+              type="number"
+              id="experience"
+              value={data.experience}
+              onChange={(e) =>
+                setData({ ...data, experience: e.target.value })
+              }
+              className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+            />
+          </div>
+          <div className="w-[40%]">
+            <label htmlFor="file" className="leading-7 text-sm ">
+              Select Profile
+            </label>
+            <label
+              htmlFor="file"
+              className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full flex justify-center items-center cursor-pointer"
+            >
+              Upload
+              <span className="ml-2">
+                <FiUpload />
+              </span>
+            </label>
+            <input
+              hidden
+              type="file"
+              id="file"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
           </div>
           <button
             type="submit"
@@ -496,7 +550,7 @@ const Faculty = () => {
           {search && id && (
             <form
               onSubmit={updateFacultyProfile}
-              className="w-[70%] flex justify-center items-center flex-wrap gap-6 mx-auto mt-10"
+              className="w-[70%] flex justify-center items-center flex-wrap gap-8 mx-auto mt-10"
             >
               <div className="w-[40%]">
                 <label htmlFor="firstname" className="leading-7 text-sm ">
@@ -647,6 +701,61 @@ const Faculty = () => {
               </button>
             </form>
           )}
+        </div>
+      )}
+      {selected === "view" && (
+
+        <div className="mt-8 w-full">
+          <div className="border border-blue-200 shadow-lg rounded-lg mb-4">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-blue-300">
+                  <th className="py-2 px-4 border border-blue-700">SR NO</th>
+                  <th className="py-2 px-4 border border-blue-700">Employee Id</th>
+                  <th className="py-2 px-4 border border-blue-700">Name</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {faculty.sort((a, b) => {
+                  const lastNameCompare = a.lastName.localeCompare(b.lastName);
+                  if (lastNameCompare !== 0) {
+                    return lastNameCompare;
+                  }
+                  return a.firstName.localeCompare(b.firstName);
+                }).map((item, index) => (
+                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{index + 1}</td>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{item.employeeId}</td>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{`${item.lastName} ${item.firstName} ${item.middleName}`}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-center space-x-4 mt-12">
+            <>
+              <button
+                className="px-4 py-2 mr-8 text-xl flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                onClick={handleDownloadExcel}
+              >
+                Download Excel
+                <span className="ml-2">
+                  <FaFileExcel />
+                </span>
+              </button>
+
+              <button
+                className="px-4 py-2 ml-8 text-xl flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                onClick={handleDownloadPDF}
+              >
+                Download PDF
+                <span className="ml-2">
+                  <FaFilePdf />
+                </span>
+              </button>
+            </>
+          </div>
         </div>
       )}
     </div>

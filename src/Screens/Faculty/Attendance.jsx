@@ -32,6 +32,7 @@ function Attendance() {
         if (response.data.success) {
           if (response.data.user.length === 0) {
             toast.error("No Students Found!");
+            setShowTable(false);
           } else {
             toast.success(response.data.message);
             setStudents(response.data.user);
@@ -61,9 +62,9 @@ function Attendance() {
   const handleDownloadExcel = () => {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet([
-      ["PRN", "Name", "Present/Absent"],
-      ...students.map((student) => [
-        student.enrollmentNo,
+      ["SR NO","PRN", "Name", "Present/Absent"],
+      ...students.map((student,index) => [
+        index+1,student.enrollmentNo,
         `${student.lastName} ${student.firstName} ${student.middleName}`,
         student.isPresent ? "Present" : "Absent",
       ]),
@@ -81,9 +82,9 @@ function Attendance() {
       doc.setFontSize(12); // Set font size
       const pdfTitle = `Attendance Of Class ${search} - ${dayjs().format("DD-MM-YYYY HH:mm")}`;
       doc.text(pdfTitle, 60, 10);
-      const columns = ["PRN", "NAME", "PRESENT/ABSENT"];
-      const rows = students.map((student) => [
-        student.enrollmentNo,
+      const columns = ["SR NO","PRN", "NAME", "PRESENT/ABSENT"];
+      const rows = students.map((student,index) => [
+        index+1,student.enrollmentNo,
         `${student.lastName} ${student.firstName} ${student.middleName}`,
         student.isPresent ? "Present" : "Absent",
       ]);
@@ -137,6 +138,7 @@ function Attendance() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-blue-300">
+                  <th className="py-2 px-4 border border-blue-700">SR NO</th>
                   <th className="py-2 px-4 border border-blue-700">PRN</th>
                   <th className="py-2 px-4 border border-blue-700">Name</th>
                   <th className="py-2 px-4 border border-blue-700">Present/Absent</th>
@@ -152,6 +154,7 @@ function Attendance() {
                   return a.firstName.localeCompare(b.firstName);
                 }).map((item, index) => (
                   <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{index+1}</td>
                     <td className="py-2 px-4 border border-blue-700 text-center">{item.enrollmentNo}</td>
                     <td className="py-2 px-4 border border-blue-700 text-center">{`${item.lastName} ${item.firstName} ${item.middleName}`}</td>
                     <td className="py-2 px-4 border border-blue-700 text-center">

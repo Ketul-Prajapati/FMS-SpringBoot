@@ -4,6 +4,9 @@ import { FiSearch } from "react-icons/fi";
 import toast from "react-hot-toast";
 import Heading from "../../components/Heading";
 import axios from "axios";
+import { FaFilePdf, FaFileExcel,FaListUl } from "react-icons/fa";
+import "jspdf-autotable";
+import * as XLSX from "xlsx";
 import * as formData from 'form-data';
 import { mailgunApi } from "../../mailgun_api";
 import Mailgun from "mailgun.js";
@@ -13,6 +16,8 @@ const mg = mailgun.client({ username: 'api', key: `${mailgunApi()}` });
 const Student = () => {
   // const [file, setFile] = useState();
   const [selected, setSelected] = useState("add");
+  const [students, setStudents] = useState([]);
+  const [showTable, setShowTable] = useState(false);
   // const [branch, setBranch] = useState();
   const [search, setSearch] = useState();
   const [data, setData] = useState({
@@ -275,6 +280,73 @@ const Student = () => {
       });
   };
 
+  const viewStudentHandler = (e) => {
+    e.preventDefault();
+    toast.loading("Getting students list");
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .post(
+        `${baseApiURL()}/student/details/getDetails`,
+        { class: search },
+        { headers }
+      )
+      .then((response) => {
+        toast.dismiss();
+        if (response.data.success) {
+          if (response.data.user.length === 0) {
+            toast.error("No Students Found!");
+          } else {
+            toast.success(response.data.message);
+            setStudents(response.data.user);
+            setShowTable(true);
+          }
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+        console.error(error);
+      });
+  };
+
+  const handleDownloadExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([
+      ["SR NO","PRN", "Name"],
+      ...students.map((student,index) => [index+1,
+        student.enrollmentNo,
+        `${student.lastName} ${student.firstName} ${student.middleName}`,
+      ]),
+    ]);
+
+    XLSX.utils.book_append_sheet(wb, ws, "Students Sheet");
+    XLSX.writeFile(wb, `${search}_Students.xlsx`);
+  };
+
+  const handleDownloadPDF = () => {
+    // Importing 'jspdf' library
+    import("jspdf").then((jsPDF) => {
+      const doc = new jsPDF.default();
+      doc.setFont("arial"); // Set font type
+      doc.setFontSize(15); // Set font size
+      const pdfTitle = `LIST OF ${search} STUDENTS`;
+      doc.text(pdfTitle, 60, 10);
+      const columns = ["SR NO","PRN", "NAME"];
+      const rows = students.map((student,index) => [
+        index+1,student.enrollmentNo,
+        `${student.lastName} ${student.firstName} ${student.middleName}`,
+      ]);
+      doc.autoTable({
+        head: [columns],
+        body: rows,
+      });
+      doc.save(`${search}_Students.pdf`);
+    });
+  };
+
   const setMenuHandler = (type) => {
     setSelected(type);
     // setFile("");
@@ -308,10 +380,17 @@ const Student = () => {
           </button>
           <button
             className={`${selected === "edit" && "border-b-2 "
-              }border-blue-500 px-4 py-2 text-black rounded-sm`}
+              }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
             onClick={() => setMenuHandler("edit")}
           >
             Edit Student
+          </button>
+          <button
+            className={`${selected === "view" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm`}
+            onClick={() => setMenuHandler("view")}
+          >
+            View Student
           </button>
         </div>
       </div>
@@ -498,7 +577,7 @@ const Student = () => {
           {search && id && (
             <form
               onSubmit={updateStudentProfile}
-              className="w-[70%] flex justify-center items-center flex-wrap gap-6 mx-auto mt-10"
+              className="w-[70%] flex justify-center items-center flex-wrap gap-8 mx-auto mt-10"
             >
               <div className="w-[40%]">
                 <label htmlFor="firstname" className="leading-7 text-sm ">
@@ -604,27 +683,6 @@ const Student = () => {
                   <option value="MCA-II">MCA-II</option>
                 </select>
               </div>
-              {/* <div className="w-[40%]">
-                <label htmlFor="branch" className="leading-7 text-sm ">
-                  Branch
-                </label>
-                <select
-                  disabled
-                  id="branch"
-                  className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
-                  value={data.branch}
-                  onChange={(e) => setData({ ...data, branch: e.target.value })}
-                >
-                  <option defaultValue>-- Select --</option>
-                  {branch?.map((branch) => {
-                    return (
-                      <option value={branch.name} key={branch.name}>
-                        {branch.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div> */}
               <div className="w-[40%]">
                 <label htmlFor="gender" className="leading-7 text-sm ">
                   Select Gender
@@ -639,26 +697,6 @@ const Student = () => {
                   <option value="Female">Female</option>
                 </select>
               </div>
-              {/* <div className="w-[40%]">
-                <label htmlFor="file" className="leading-7 text-sm ">
-                  Select New Profile
-                </label>
-                <label
-                  htmlFor="file"
-                  className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full flex justify-center items-center cursor-pointer"
-                >
-                  Upload
-                  <span className="ml-2">
-                    <FiUpload />
-                  </span>
-                </label>
-                <input
-                  hidden
-                  type="file"
-                  id="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-              </div> */}
               <button
                 type="submit"
                 className="bg-blue-500 px-6 py-3 rounded-sm mb-6 text-white"
@@ -668,6 +706,96 @@ const Student = () => {
             </form>
           )}
         </div>
+      )}
+      {selected === "view" && (
+        <>
+          <div className="w-full flex justify-center items-center mt-12">
+            <div className="w-full flex flex-col justify-center items-center">
+              <p className="mb-4 text-xl font-medium">Select Class To View</p>
+              <div className="w-full flex justify-center items-center">
+                <select
+                  name="class name"
+                  id="class"
+                  className="px-2 ml-40 bg-blue-50 py-3 rounded-sm text-base w-[40%] accent-blue-700 mt-4"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                >
+                  <option defaultValue>-- Select Class --</option>
+                  <option value="BE-I">BE-I</option>
+                  <option value="BE-II">BE-II</option>
+                  <option value="BE-III">BE-III</option>
+                  <option value="BE-IV">BE-IV</option>
+                  <option value="MCA-I">MCA-I</option>
+                  <option value="MCA-II">MCA-II</option>
+                </select>
+                <button
+                  className="relative ml-3 mt-3 flex justify-center items-center border-2 border-red-500 px-3 py-2 rounded text-red-500"
+                  onClick={viewStudentHandler}
+                >
+                  View Students
+                  <span className="ml-2">
+                    <FaListUl className="text-red-500 text-xl" />
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 w-full">
+            {showTable && students.length > 0 && (
+              <div className="border border-blue-200 shadow-lg rounded-lg mb-4">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-blue-300">
+                      <th className="py-2 px-4 border border-blue-700">SR NO</th>
+                      <th className="py-2 px-4 border border-blue-700">PRN</th>
+                      <th className="py-2 px-4 border border-blue-700">Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    {students.sort((a, b) => {
+                      const lastNameCompare = a.lastName.localeCompare(b.lastName);
+                      if (lastNameCompare !== 0) {
+                        return lastNameCompare;
+                      }
+                      return a.firstName.localeCompare(b.firstName);
+                    }).map((item, index) => (
+                      <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
+                        <td className="py-2 px-4 border border-blue-700 text-center">{index+1}</td>
+                        <td className="py-2 px-4 border border-blue-700 text-center">{item.enrollmentNo}</td>
+                        <td className="py-2 px-4 border border-blue-700 text-center">{`${item.lastName} ${item.firstName} ${item.middleName}`}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>)}
+            <div className="flex justify-center space-x-4 mt-12">
+              {showTable && students.length > 0 && (
+                <>
+                  <button
+                    className="px-4 py-2 mr-8 text-xl flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                    onClick={handleDownloadExcel}
+                  >
+                    Download Excel
+                    <span className="ml-2">
+                      <FaFileExcel />
+                    </span>
+                  </button>
+
+                  <button
+                    className="px-4 py-2 ml-8 text-xl flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                    onClick={handleDownloadPDF}
+                  >
+                    Download PDF
+                    <span className="ml-2">
+                      <FaFilePdf />
+                    </span>
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
