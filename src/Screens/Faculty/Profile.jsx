@@ -116,9 +116,9 @@ const Profile = () => {
               <p className="text-lg font-normal mb-2">
                 Phone Number: {data[0].phoneNumber}
               </p>
-              <p className="text-lg font-normal mb-2">
+              {/* <p className="text-lg font-normal mb-2">
                 Department: {data[0].department}
-              </p>
+              </p> */}
             </div>
             <button
               className={`${
