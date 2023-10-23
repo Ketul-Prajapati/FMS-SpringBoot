@@ -32,6 +32,7 @@ const Subjects = () => {
             setSubject();
           }
           else{
+            toast.success(response.data.message);
             setSubject(response.data.subject);
           }
         } else {
@@ -57,7 +58,7 @@ const Subjects = () => {
         if (response.data.success) {
           toast.success(response.data.message);
           setData({ name: "", code: "" ,semester: ""});
-          getSubjectHandler();
+          // getSubjectHandler();
         } else {
           toast.error(response.data.message);
         }
