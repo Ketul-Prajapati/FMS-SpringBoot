@@ -7,6 +7,7 @@ import { baseApiURL } from "../../baseUrl";
 
 const Marks = () => {
   const [subject, setSubject] = useState();
+  const [search,setSearch] = useState();
   // const [branch, setBranch] = useState();
   const [studentData, setStudentData] = useState();
   const [selected, setSelected] = useState({
@@ -97,15 +98,19 @@ const Marks = () => {
   //     });
   // };
 
-  const getSubjectData = () => {
+  const getSubjectData = (e) => {
+    const headers = {
+      "Content-Type": "application/json",
+    };
     toast.loading("Loading Subjects");
     axios
-      .get(`${baseApiURL()}/subject/getSubject`)
+      .post(`${baseApiURL()}/subject/getSubject`,{ semester: search},{headers})
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
           setSubject(response.data.subject);
         } else {
+          setSubject();
           toast.error(response.data.message);
         }
       })
@@ -115,10 +120,10 @@ const Marks = () => {
       });
   };
 
-  useEffect(() => {
-    // getBranchData();
-    getSubjectData();
-  }, []);
+  // useEffect(() => {
+  //   // getBranchData();
+  //   getSubjectData();
+  // }, []);
 
   const resetValueHandler = () => {
     setStudentData();
@@ -173,9 +178,9 @@ const Marks = () => {
               <select
                 id="semester"
                 className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
-                value={selected.semester}
-                onChange={(e) =>
-                  setSelected({ ...selected, semester: e.target.value })
+                value={search}
+              onChange={(e) => {setSearch(e.target.value);
+                  getSubjectData()}
                 }
               >
                 <option defaultValue>-- Select --</option>
