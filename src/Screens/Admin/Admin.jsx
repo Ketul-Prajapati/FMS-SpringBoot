@@ -506,7 +506,7 @@ const Admin = () => {
           {search && id && (
             <form
               onSubmit={updateAdminProfile}
-              className="w-[70%] flex justify-center items-center flex-wrap gap-8 mx-auto mt-10"
+              className="w-[70%] flex justify-center items-center flex-wrap gap-10 mx-auto mt-10"
             >
               <div className="w-[40%]">
                 <label htmlFor="firstname" className="leading-7 text-sm ">
