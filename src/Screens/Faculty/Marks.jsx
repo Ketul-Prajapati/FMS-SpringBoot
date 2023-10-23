@@ -7,10 +7,10 @@ import { baseApiURL } from "../../baseUrl";
 
 const Marks = () => {
   const [subject, setSubject] = useState();
-  const [branch, setBranch] = useState();
+  // const [branch, setBranch] = useState();
   const [studentData, setStudentData] = useState();
   const [selected, setSelected] = useState({
-    branch: "",
+    // branch: "",
     semester: "",
     subject: "",
     examType: "",
@@ -22,7 +22,7 @@ const Marks = () => {
     axios
       .post(
         `${baseApiURL()}/student/details/getDetails`,
-        { branch: selected.branch, semester: selected.semester },
+        { semester: selected.semester },
         { headers }
       )
       .then((response) => {
@@ -78,24 +78,24 @@ const Marks = () => {
       });
   };
 
-  const getBranchData = () => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .get(`${baseApiURL()}/branch/getBranch`, { headers })
-      .then((response) => {
-        if (response.data.success) {
-          setBranch(response.data.branches);
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error(error.message);
-      });
-  };
+  // const getBranchData = () => {
+  //   const headers = {
+  //     "Content-Type": "application/json",
+  //   };
+  //   axios
+  //     .get(`${baseApiURL()}/branch/getBranch`, { headers })
+  //     .then((response) => {
+  //       if (response.data.success) {
+  //         setBranch(response.data.branches);
+  //       } else {
+  //         toast.error(response.data.message);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       toast.error(error.message);
+  //     });
+  // };
 
   const getSubjectData = () => {
     toast.loading("Loading Subjects");
@@ -116,7 +116,7 @@ const Marks = () => {
   };
 
   useEffect(() => {
-    getBranchData();
+    // getBranchData();
     getSubjectData();
   }, []);
 
@@ -143,7 +143,7 @@ const Marks = () => {
       {!studentData && (
         <>
           <div className="mt-10 w-full flex justify-evenly items-center gap-x-6">
-            <div className="w-full">
+            {/* <div className="w-full">
               <label htmlFor="branch" className="leading-7 text-base ">
                 Select Branch
               </label>
@@ -165,7 +165,7 @@ const Marks = () => {
                     );
                   })}
               </select>
-            </div>
+            </div> */}
             <div className="w-full">
               <label htmlFor="semester" className="leading-7 text-base ">
                 Select Semester
@@ -241,7 +241,7 @@ const Marks = () => {
       {studentData && studentData.length !== 0 && (
         <>
           <p className="mt-4 text-lg">
-            Upload {selected.examType} Marks Of {selected.branch} Semester{" "}
+            Upload {selected.examType} Marks Of Semester{" "}
             {selected.semester} of {selected.subject}
           </p>
           <div
