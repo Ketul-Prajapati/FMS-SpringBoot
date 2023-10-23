@@ -297,6 +297,7 @@ const Student = () => {
         if (response.data.success) {
           if (response.data.user.length === 0) {
             toast.error("No Students Found!");
+            setShowTable(false);
           } else {
             toast.success(response.data.message);
             setStudents(response.data.user);
