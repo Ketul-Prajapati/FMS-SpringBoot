@@ -204,7 +204,7 @@ const Marks = () => {
     if (selectedSemester) {
       getSubjectData();
     }
-  }, [selectedSemester]);
+  }, [selectedSemester,getSubjectData]);
 
   // useEffect(() => {
   //   // getBranchData();
