@@ -161,7 +161,7 @@ const Profile = () => {
           <img
             src={data.profile}
             alt="admin profile"
-            className="h-[200px] w-[200px] object-cover rounded-lg shadow-md"
+            className="h-[15%] w-[15%] object-cover rounded-lg shadow-md"
           />
         </>
       )}

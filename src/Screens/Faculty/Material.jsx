@@ -22,7 +22,7 @@ const Material = () => {
   useEffect(() => {
     toast.loading("Loading Subjects");
     axios
-      .get(`${baseApiURL()}/subject/getSubject`)
+      .post(`${baseApiURL()}/subject/getSubject`)
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {

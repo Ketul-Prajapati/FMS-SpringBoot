@@ -12,7 +12,7 @@ const Material = () => {
   useEffect(() => {
     toast.loading("Loading Subjects");
     axios
-      .get(`${baseApiURL()}/subject/getSubject`)
+      .post(`${baseApiURL()}/subject/getSubject`)
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
@@ -64,7 +64,7 @@ const Material = () => {
             name="subject"
             id="subject"
             onChange={onSelectChangeHandler}
-            className="px-2 bg-blue-50 py-3 rounded-sm text-base accent-blue-700"
+            className="px-2 bg-blue-50 py-3 rounded-sm text-base accent-blue-700 w-[80%]"
           >
             <option defaultValue value="select">
               -- Select Subject --
@@ -80,7 +80,8 @@ const Material = () => {
           </select>
           <button
             onClick={getSubjectMaterial}
-            className="bg-blue-500 text-white py-3 px-4 text-2xl rounded-sm"
+            // className="border-blue-500 text-blue py-3 px-4 text-2xl rounded-sm"
+            className="relative text-2xl py-3 px-4 flex justify-center items-center border-2 border-red-500 rounded text-red-500"
           >
             <HiOutlineSearch />
           </button>
