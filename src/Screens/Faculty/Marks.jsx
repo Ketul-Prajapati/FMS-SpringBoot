@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect,useState } from "react";
 import Heading from "../../components/Heading";
 import toast from "react-hot-toast";
 import { BiArrowBack } from "react-icons/bi";
@@ -10,20 +10,22 @@ const Marks = () => {
   const [search,setSearch] = useState();
   // const [branch, setBranch] = useState();
   const [studentData, setStudentData] = useState();
+  const [selectedSemester, setSelectedSemester] = useState('');
   const [selected, setSelected] = useState({
     // branch: "",
     semester: "",
     subject: "",
-    examType: "",
+    // examType: "",
   });
   const loadStudentDetails = () => {
     const headers = {
       "Content-Type": "application/json",
     };
-    axios
+    if(search==='1' || search==='2'){
+      axios
       .post(
         `${baseApiURL()}/student/details/getDetails`,
-        { semester: selected.semester },
+        { class: 'BE-I'},
         { headers }
       )
       .then((response) => {
@@ -37,6 +39,64 @@ const Marks = () => {
         console.error(error);
         toast.error(error.message);
       });
+    }
+   else if(search==='3' || search==='4'){
+      axios
+      .post(
+        `${baseApiURL()}/student/details/getDetails`,
+        { class: 'BE-II'},
+        { headers }
+      )
+      .then((response) => {
+        if (response.data.success) {
+          setStudentData(response.data.user);
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(error.message);
+      });
+    }
+    else if(search==='5' || search==='6'){
+      axios
+      .post(
+        `${baseApiURL()}/student/details/getDetails`,
+        { class: 'BE-III'},
+        { headers }
+      )
+      .then((response) => {
+        if (response.data.success) {
+          setStudentData(response.data.user);
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(error.message);
+      });
+    }
+    else if(search==='7' || search==='8'){
+      axios
+      .post(
+        `${baseApiURL()}/student/details/getDetails`,
+        { class: 'BE-IV'},
+        { headers }
+      )
+      .then((response) => {
+        if (response.data.success) {
+          setStudentData(response.data.user);
+        } else {
+          toast.error(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(error.message);
+      });
+    }
   };
 
   const submitMarksHandler = () => {
@@ -54,20 +114,37 @@ const Marks = () => {
       "Content-Type": "application/json",
     };
     axios
-      .post(
-        `${baseApiURL()}/marks/addMarks`,
-        {
-          enrollmentNo: enrollment,
-          [selected.examType]: {
-            [selected.subject]: value,
-          },
-        },
-        { headers }
-      )
+      .post(`${baseApiURL()}/marks/getMarks`,{enrollment},{headers})
       .then((response) => {
         if (response.data.success) {
-          toast.dismiss();
-          toast.success(response.data.message);
+          const currentMarks = response.data.marks.Internal;
+  
+          // Add a new subject and its marks to the currentMarks object
+          currentMarks[selected.subject] = value;
+  
+          // Send the updated Internal object in the POST request
+          axios
+            .post(
+              `${baseApiURL()}/marks/addMarks`,
+              {
+                enrollmentNo: enrollment,
+                Internal: currentMarks,
+              },
+              { headers }
+            )
+            .then((response) => {
+              if (response.data.success) {
+                toast.dismiss();
+                toast.success(response.data.message);
+              } else {
+                toast.dismiss();
+                toast.error(response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              toast.error(error.message);
+            });
         } else {
           toast.dismiss();
           toast.error(response.data.message);
@@ -78,6 +155,7 @@ const Marks = () => {
         toast.error(error.message);
       });
   };
+  
 
   // const getBranchData = () => {
   //   const headers = {
@@ -120,6 +198,12 @@ const Marks = () => {
       });
   };
 
+  useEffect(() => {
+    if (selectedSemester) {
+      getSubjectData();
+    }
+  }, [selectedSemester]);
+
   // useEffect(() => {
   //   // getBranchData();
   //   getSubjectData();
@@ -132,7 +216,7 @@ const Marks = () => {
   return (
     <div className="w-[85%] mx-auto flex justify-center items-start flex-col my-10">
       <div className="relative flex justify-between items-center w-full">
-        <Heading title={`Upload Marks`} />
+        <Heading title={`Upload Internal Marks`} />
         {studentData && (
           <button
             className="absolute right-2 flex justify-center items-center border-2 border-red-500 px-3 py-2 rounded text-red-500"
@@ -179,9 +263,10 @@ const Marks = () => {
                 id="semester"
                 className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
                 value={search}
-              onChange={(e) => {setSearch(e.target.value);
-                  getSubjectData()}
-                }
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setSelectedSemester(e.target.value);
+                }}
               >
                 <option defaultValue>-- Select --</option>
                 <option value="1">1st Semester</option>
@@ -217,7 +302,7 @@ const Marks = () => {
                   })}
               </select>
             </div>
-            <div className="w-full">
+            {/* <div className="w-full">
               <label htmlFor="examType" className="leading-7 text-base ">
                 Select Exam Type
               </label>
@@ -233,7 +318,7 @@ const Marks = () => {
                 <option value="internal">Internal</option>
                 <option value="external">External</option>
               </select>
-            </div>
+            </div> */}
           </div>
           <button
             className="bg-blue-50 px-4 py-2 mt-8 mx-auto rounded border-2 border-blue-500 text-black"
@@ -246,8 +331,8 @@ const Marks = () => {
       {studentData && studentData.length !== 0 && (
         <>
           <p className="mt-4 text-lg">
-            Upload {selected.examType} Marks Of Semester{" "}
-            {selected.semester} of {selected.subject}
+            Upload Internal Marks Of Semester{" "}
+            {search} of {selected.subject}
           </p>
           <div
             className="w-full flex flex-wrap justify-center items-center mt-8 gap-4"

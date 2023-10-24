@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { baseApiURL } from "../../baseUrl";
 import { useSelector } from "react-redux";
 import Heading from "../../components/Heading";
 
@@ -15,7 +16,7 @@ const Marks = () => {
     };
     axios
       .post(
-        `http://localhost:5000/api/marks/getMarks`,
+        `${baseApiURL()}/marks/getMarks`,
         { enrollmentNo: userData.enrollmentNo },
         {
           headers: headers,
@@ -40,7 +41,7 @@ const Marks = () => {
         {internal && (
           <div className="w-1/2 shadow-md p-4">
             <p className="border-b-2 border-red-500 text-2xl font-semibold pb-2">
-              Internal Marks (Out of 40)
+              Internal Marks (Out of 20)
             </p>
             <div className="mt-5">
               {Object.keys(internal).map((item, index) => {
@@ -60,7 +61,7 @@ const Marks = () => {
         {external && (
           <div className="w-1/2 shadow-md p-4">
             <p className="border-b-2 border-red-500 text-2xl font-semibold pb-2">
-              External Marks (Out of 60)
+              External Marks (Out of 80)
             </p>
             <div className="mt-5">
               {Object.keys(external).map((item, index) => {
