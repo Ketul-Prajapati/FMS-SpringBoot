@@ -17,7 +17,7 @@ const Timetable = () => {
       axios
         .post(
           `${baseApiURL()}/timetable/getTimetable`,
-          { semester: userData.semester, branch: userData.branch },
+          { semester: userData.semester},
           {
             headers: headers,
           }
@@ -33,7 +33,7 @@ const Timetable = () => {
         });
     };
     userData && getTimetable();
-  }, [userData, userData.branch, userData.semester]);
+  }, [userData, userData.semester]);
 
   return (
     <div className="w-[85%] mx-auto mt-10 flex justify-center items-start flex-col mb-10">

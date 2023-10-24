@@ -9,16 +9,16 @@ import { storage } from "../../firebase/config";
 import { baseApiURL } from "../../baseUrl";
 const Timetable = () => {
   const [addselected, setAddSelected] = useState({
-    branch: "",
+    // branch: "",
     semester: "",
     link: "",
   });
   const [file, setFile] = useState();
-  const [branch, setBranch] = useState();
+  // const [branch, setBranch] = useState();
 
-  useEffect(() => {
-    getBranchData();
-  }, []);
+  // useEffect(() => {
+  //   getBranchData();
+  // }, []);
   const addTimetableHandler = useCallback(() => {
     toast.loading("Adding Timetable");
     const headers = {
@@ -33,7 +33,7 @@ const Timetable = () => {
         if (response.data.success) {
           toast.success(response.data.message);
           setAddSelected({
-            branch: "",
+            // branch: "",
             semester: "",
             link: "",
           });
@@ -79,24 +79,24 @@ const Timetable = () => {
     file && uploadFileToStorage(file);
   }, [file,addTimetableHandler,addselected]);
 
-  const getBranchData = () => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .get(`${baseApiURL()}/branch/getBranch`, { headers })
-      .then((response) => {
-        if (response.data.success) {
-          setBranch(response.data.branches);
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error(error.message);
-      });
-  };
+  // const getBranchData = () => {
+  //   const headers = {
+  //     "Content-Type": "application/json",
+  //   };
+  //   axios
+  //     .get(`${baseApiURL()}/branch/getBranch`, { headers })
+  //     .then((response) => {
+  //       if (response.data.success) {
+  //         setBranch(response.data.branches);
+  //       } else {
+  //         toast.error(response.data.message);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       toast.error(error.message);
+  //     });
+  // };
 
   return (
     <div className="w-[85%] mx-auto mt-10 flex justify-center items-start flex-col mb-10">
@@ -106,7 +106,7 @@ const Timetable = () => {
       <div className="w-full flex justify-evenly items-center mt-12">
         <div className="w-1/2 flex flex-col justify-center items-center">
           <p className="mb-4 text-xl font-medium">Add Timetable</p>
-          <select
+          {/* <select
             id="branch"
             className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
             value={addselected.branch}
@@ -123,7 +123,7 @@ const Timetable = () => {
                   </option>
                 );
               })}
-          </select>
+          </select> */}
           <select
             onChange={(e) =>
               setAddSelected({ ...addselected, semester: e.target.value })
