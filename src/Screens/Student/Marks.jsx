@@ -36,7 +36,7 @@ const Marks = () => {
 
   return (
     <div className="w-[85%] mx-auto mt-10 flex justify-center items-start flex-col mb-10">
-      <Heading title={`Marks of Semester ${userData.semester}`} />
+      <Heading title={`Marks of ${userData.class}`} />
       <div className="mt-14 w-full flex gap-20">
         {internal && (
           <div className="w-1/2 shadow-md p-4">
