@@ -226,7 +226,7 @@ const Marks = () => {
   
       getSubjectData();
     }
-  }, [selectedSemester]);
+  }, [selectedSemester,search]);
 
   // useEffect(() => {
   //   // getBranchData();
