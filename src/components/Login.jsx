@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiLogIn } from "react-icons/fi";
 import axios from "axios";
+import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai';
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { baseApiURL } from "../baseUrl";
@@ -9,6 +10,10 @@ const Login = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState("Admin");
   const { register, handleSubmit } = useForm();
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const onSubmit = (data) => {
     if (data.login !== "" && data.password !== "") {
@@ -44,37 +49,46 @@ const Login = () => {
           />
         <h2 className="text-3xl font-semibold mb-6 flex items-center justify-center">{selected} Login</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-4">
-            <label htmlFor="loginid" className="block text-gray-600">
-              {selected} Login ID
-            </label>
-            <input
-              type="number"
-              id="loginid"
-              required
-              className="mt-2 px-3 py-2 block w-full rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
-              {...register("loginid")}
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-600">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              required
-              className="mt-2 px-3 py-2 block w-full rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
-              {...register("password")}
-            />
-          </div>
+      <div className="mb-4">
+        <label htmlFor="loginid" className="block text-gray-600">
+          {selected} Login ID
+        </label>
+        <input
+          type="number"
+          id="loginid"
+          required
+          className="mt-2 px-3 py-2 block w-full rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
+          {...register("loginid")}
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="password" className="block text-gray-600">
+          Password
+        </label>
+        <div className="relative">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            id="password"
+            required
+            className="mt-2 px-3 py-2 block w-full rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
+            {...register("password")}
+          />
           <button
-            type="submit"
-            className="bg-blue-500 flex w-full justify-center text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300 ease-in-out"
+            type="button"
+            className="absolute top-1/2 right-4 transform -translate-y-1/2"
+            onClick={togglePasswordVisibility}
           >
-            Login <FiLogIn className="ml-2 mt-1" />
+            {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
           </button>
-        </form>
+        </div>
+      </div>
+      <button
+        type="submit"
+        className="bg-blue-500 flex w-full justify-center text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300 ease-in-out"
+      >
+        Login <FiLogIn className="ml-2 mt-1" />
+      </button>
+    </form>
         <div className="mt-4 flex justify-center">
           <button
             className={`mr-8 text-blue-500 font-semibold hover:text-blue-700 transition duration-300 ease-in-out ${selected === "Admin" && "border-b-2 border-blue-500"
