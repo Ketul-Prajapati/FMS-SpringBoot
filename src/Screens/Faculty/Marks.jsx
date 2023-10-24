@@ -178,33 +178,55 @@ const Marks = () => {
   //     });
   // };
 
-  const getSubjectData = (e) => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    toast.loading("Loading Subjects");
-    axios
-      .post(`${baseApiURL()}/subject/getSubject`,{ semester: search},{headers})
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          setSubject(response.data.subject);
-        } else {
-          setSubject();
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.message);
-      });
-  };
+  // const getSubjectData = (e) => {
+  //   const headers = {
+  //     "Content-Type": "application/json",
+  //   };
+  //   toast.loading("Loading Subjects");
+  //   axios
+  //     .post(`${baseApiURL()}/subject/getSubject`,{ semester: search},{headers})
+  //     .then((response) => {
+  //       toast.dismiss();
+  //       if (response.data.success) {
+  //         setSubject(response.data.subject);
+  //       } else {
+  //         setSubject();
+  //         toast.error(response.data.message);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       toast.dismiss();
+  //       toast.error(error.message);
+  //     });
+  // };
 
   useEffect(() => {
     if (selectedSemester) {
+      const getSubjectData = async (e) => {
+        const headers = {
+          "Content-Type": "application/json",
+        };
+        toast.loading("Loading Subjects");
+        axios
+          .post(`${baseApiURL()}/subject/getSubject`,{ semester: search},{headers})
+          .then((response) => {
+            toast.dismiss();
+            if (response.data.success) {
+              setSubject(response.data.subject);
+            } else {
+              setSubject();
+              toast.error(response.data.message);
+            }
+          })
+          .catch((error) => {
+            toast.dismiss();
+            toast.error(error.message);
+          });
+      };
+  
       getSubjectData();
     }
-  }, [selectedSemester,getSubjectData]);
+  }, [selectedSemester]);
 
   // useEffect(() => {
   //   // getBranchData();
