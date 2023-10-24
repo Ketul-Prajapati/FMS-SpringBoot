@@ -17,7 +17,7 @@ const Subjects = () => {
   const [subject, setSubject] = useState();
 
   const getSubjectHandler = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     toast.loading("Getting Subjects");
     const headers = {
       "Content-Type": "application/json",
