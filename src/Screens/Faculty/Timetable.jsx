@@ -71,7 +71,6 @@ const Timetable = () => {
             setFile();
             toast.success("Timetable Uploaded To Server");
             setAddSelected({ ...addselected, link: downloadURL });
-            addTimetableHandler();
           });
         }
       );
@@ -129,8 +128,8 @@ const Timetable = () => {
               setAddSelected({ ...addselected, semester: e.target.value })
             }
             value={addselected.semester}
-            name="branch"
-            id="branch"
+            name="semester"
+            id="semester"
             className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
           >
             <option defaultValue>-- Select Semester --</option>

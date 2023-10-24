@@ -14,11 +14,11 @@ const Timetable = () => {
       const headers = {
         "Content-Type": "application/json",
       };
-      if(userData.class==='BE-I'){
+      if (userData.class === 'BE-I') {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [1,2] },
+            { semester: [1, 2] },
             {
               headers: headers,
             }
@@ -34,11 +34,11 @@ const Timetable = () => {
             toast.error(error.response.data.message);
           });
       }
-      else if(userData.class==='BE-II'){
+      else if (userData.class === 'BE-II') {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [3,4] },
+            { semester: [3, 4] },
             {
               headers: headers,
             }
@@ -54,11 +54,11 @@ const Timetable = () => {
             toast.error(error.response.data.message);
           });
       }
-      else if(userData.class==='BE-III'){
+      else if (userData.class === 'BE-III') {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [5,6] },
+            { semester: [5, 6] },
             {
               headers: headers,
             }
@@ -74,11 +74,11 @@ const Timetable = () => {
             toast.error(error.response.data.message);
           });
       }
-      else if(userData.class==='BE-IV'){
+      else if (userData.class === 'BE-IV') {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [7,8] },
+            { semester: [7, 8] },
             {
               headers: headers,
             }
@@ -94,11 +94,11 @@ const Timetable = () => {
             toast.error(error.response.data.message);
           });
       }
-      else if(userData.class==='MCA-I'){
+      else if (userData.class === 'MCA-I') {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [1,2] },
+            { semester: [1, 2] },
             {
               headers: headers,
             }
@@ -114,11 +114,11 @@ const Timetable = () => {
             toast.error(error.response.data.message);
           });
       }
-      else if(userData.class==='MCA-II'){
+      else if (userData.class === 'MCA-II') {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [3,4] },
+            { semester: [3, 4] },
             {
               headers: headers,
             }
@@ -144,7 +144,7 @@ const Timetable = () => {
         <Heading title={`Timetable of ${userData.class}`} />
         <p
           className="flex justify-center items-center text-lg font-medium cursor-pointer hover:text-red-500 hover:scale-110 ease-linear transition-all duration-200 hover:duration-200 hover:ease-linear hover:transition-all"
-          onClick={() => window.open(timetable)}
+          onClick={() => { if (timetable[0]) { window.open(timetable[0].link) } if (timetable[1]) { window.open(timetable[1].link) } }}
         >
           Download
           <span className="ml-2">
@@ -153,15 +153,15 @@ const Timetable = () => {
         </p>
       </div>
       {timetable && (
-          timetable.map((item) => [
-            <img
-                    className="mt-8 rounded-lg shadow-md w-[50%] mx-auto"
-                    src={item.link}
-                    alt="timetable"
-                  />
-            ])
+        timetable.map((item) => [
+          <img
+            className="mt-8 rounded-lg shadow-md w-[50%] mx-auto"
+            src={item.link}
+            alt="timetable"
+          />
+        ])
       )}
-      {!timetable && (
+      {timetable.length===0 && (
         <p className="mt-10">No Timetable Available At The Moment!</p>
       )}
     </div>
@@ -171,10 +171,10 @@ const Timetable = () => {
 export default Timetable;
 
 
-  // timetable.map((timetable) => [
-  // <img
-  //         className="mt-8 rounded-lg shadow-md w-[50%] mx-auto"
-  //         src={timetable}
-  //         alt="timetable"
-  //       />
-  // ])
+// timetable.map((timetable) => [
+// <img
+//         className="mt-8 rounded-lg shadow-md w-[50%] mx-auto"
+//         src={timetable}
+//         alt="timetable"
+//       />
+// ])
