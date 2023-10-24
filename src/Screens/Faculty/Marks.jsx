@@ -114,13 +114,15 @@ const Marks = () => {
       "Content-Type": "application/json",
     };
     axios
-      .post(`${baseApiURL()}/marks/getMarks`,{enrollment},{headers})
+      .post(`${baseApiURL()}/marks/getMarks`,{enrollmentNo:enrollment},{headers})
       .then((response) => {
         if (response.data.success) {
-          const currentMarks = response.data.marks.Internal;
+          // console.log(response.data.Mark[0].internal)
+          const currentMarks = response.data.Mark[0].internal;
   
           // Add a new subject and its marks to the currentMarks object
           currentMarks[selected.subject] = value;
+          // console.log(currentMarks)
   
           // Send the updated Internal object in the POST request
           axios
@@ -128,7 +130,7 @@ const Marks = () => {
               `${baseApiURL()}/marks/addMarks`,
               {
                 enrollmentNo: enrollment,
-                Internal: currentMarks,
+                internal: currentMarks,
               },
               { headers }
             )
