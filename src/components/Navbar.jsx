@@ -9,9 +9,9 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-50 bg-blue-200">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-lg shadow-md dark:bg-gray-600">
+        <div className="rounded-lg shadow-md bg-gray-600">
           <div className="p-6">
-            <p className="text-lg text-white dark:text-white-300 mb-4">
+            <p className="text-lg text-white-300 mb-4">
               Are you sure you want to log out?
             </p>
             <div className="flex justify-end">
