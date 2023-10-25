@@ -118,9 +118,9 @@ const Marks = () => {
       .then((response) => {
         if (response.data.success) {
 
-          const currentMarks = {};
+          let currentMarks = {};
           if (response.data.Mark && response.data.Mark.length > 0) {
-            const currentMarks = response.data.Mark[0].internal;
+            currentMarks = response.data.Mark[0].internal;
           } 
           currentMarks[selected.subject] = value;
           // Send the updated Internal object in the POST request
