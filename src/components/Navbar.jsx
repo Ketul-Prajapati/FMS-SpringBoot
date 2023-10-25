@@ -52,7 +52,7 @@ const Navbar = () => {
   return (
     <div className="shadow-md px-6 py-4 flex justify-between items-center">
       <p
-        className="font-semibold text-2xl flex justify-center items-center cursor-pointer"
+        className="font-semibold text-sm lg:text-2xl flex justify-center items-center cursor-pointer"
       >
         <span className="mr-2">
           <RxDashboard />
