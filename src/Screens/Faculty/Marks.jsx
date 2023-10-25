@@ -117,13 +117,12 @@ const Marks = () => {
       .post(`${baseApiURL()}/marks/getMarks`,{enrollmentNo:enrollment},{headers})
       .then((response) => {
         if (response.data.success) {
-          // console.log(response.data.Mark[0].internal)
-          const currentMarks = response.data.Mark[0].internal;
-  
-          // Add a new subject and its marks to the currentMarks object
+
+          const currentMarks = {};
+          if (response.data.Mark && response.data.Mark.length > 0) {
+            const currentMarks = response.data.Mark[0].internal;
+          } 
           currentMarks[selected.subject] = value;
-          // console.log(currentMarks)
-  
           // Send the updated Internal object in the POST request
           axios
             .post(
