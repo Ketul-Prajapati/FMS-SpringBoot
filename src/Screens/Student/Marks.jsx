@@ -23,7 +23,10 @@ const Marks = () => {
       )
       .then((response) => {
         if (response.data) {
-          setInternal(response.data.Mark[0].internal);
+          if(response.data.Mark.length===0){
+            setInternal(response.data.Mark);
+          }
+          else { setInternal(response.data.Mark[0].internal)}
         }
       })
       .catch((error) => {
@@ -36,7 +39,7 @@ const Marks = () => {
     <div className="w-[85%] mx-auto mt-10 flex justify-center items-start flex-col mb-10">
       <Heading title={`Marks of ${userData.class}`} />
       <div className="mt-14 w-full flex justify-center items-center gap-20">
-        {internal && (
+        {internal && internal.length!==0&& (
           <div className="w-1/2 shadow-md p-4">
             <p className="border-b-2 border-red-500 text-2xl font-semibold pb-2">
               Internal Marks (Out of 20)
@@ -57,7 +60,7 @@ const Marks = () => {
           </div>
         )}
 
-        {!internal && <p>No Marks Available At The Moment!</p>}
+        {internal && internal.length===0 && <p>No Marks Available At The Moment!</p>}
       </div>
     </div>
   );
