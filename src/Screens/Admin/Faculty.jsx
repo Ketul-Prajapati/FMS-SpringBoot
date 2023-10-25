@@ -63,7 +63,7 @@ const Faculty = () => {
       const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(
         "state_changed",
-        (snapshot) => {},
+        (snapshot) => { },
         (error) => {
           console.error(error);
           toast.dismiss();
@@ -173,9 +173,9 @@ const Faculty = () => {
           toast.success(response.data.message);
           const password = generateRandomPassword();
           const templateName = 'successful registration'; // Replace with the name of your Mailgun template
-          const templateData ={
+          const templateData = {
             // Define variables used in your template
-            'recipientName': data.firstName+' '+data.lastName,
+            'recipientName': data.firstName + ' ' + data.lastName,
             'username': data.employeeId,
             'password': password
           };
@@ -636,18 +636,6 @@ const Faculty = () => {
                 />
               </div>
               <div className="w-[40%]">
-                <label htmlFor="email" className="leading-7 text-sm ">
-                  Enter Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={data.email}
-                  onChange={(e) => setData({ ...data, email: e.target.value })}
-                  className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                />
-              </div>
-              <div className="w-[40%]">
                 <label htmlFor="post" className="leading-7 text-sm ">
                   POST
                 </label>
@@ -658,6 +646,21 @@ const Faculty = () => {
                   onChange={(e) => setData({ ...data, post: e.target.value })}
                   className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
+              </div>
+              <div className="w-[40%]">
+                <label htmlFor="gender" className="leading-7 text-sm ">
+                  Select Gender
+                </label>
+                <select
+                  id="gender"
+                  className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
+                  value={data.gender}
+                  onChange={(e) => setData({ ...data, gender: e.target.value })}
+                >
+                  <option defaultValue>-- Select --</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
               </div>
               <div className="w-[40%]">
                 <label htmlFor="experience" className="leading-7 text-sm ">
