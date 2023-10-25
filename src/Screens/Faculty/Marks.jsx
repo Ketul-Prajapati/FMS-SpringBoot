@@ -494,7 +494,7 @@ const Marks = () => {
           )}
         </>
       )}
-      {type == "edit" && (
+      {type === "edit" && (
         <div className="my-6 mx-auto w-full">
           <form
             className="flex justify-center items-center border-2 border-blue-500 rounded w-[40%] mx-auto"
