@@ -11,7 +11,7 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
       <div className="w-full max-w-md">
         <div className="rounded-lg shadow-md bg-gray-600">
           <div className="p-6">
-            <p className="text-lg text-white-300 mb-4">
+            <p className="text-lg text-white mb-4">
               Are you sure you want to log out?
             </p>
             <div className="flex justify-end">
