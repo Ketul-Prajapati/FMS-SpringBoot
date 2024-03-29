@@ -1,3 +1,3 @@
 export const mailgunApi = () => {
-    return "7b7d9795bcb31434b142673226da2dc5-5465e583-74f17e96";
+    return "5d0a6f753a782d4cfa06ecaed9adda34-f68a26c9-d50c9db3";
   };
