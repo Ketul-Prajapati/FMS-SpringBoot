@@ -28,12 +28,12 @@ const Profile = () => {
       )
       .then((response) => {
         if (response.data.success) {
-          setData(response.data.user);
+          setData(response.data.admind);
           dispatch(
             setUserData({
-              fullname: `${response.data.user.firstName} ${response.data.user.middleName} ${response.data.user.lastName}`,
-              semester: response.data.user.semester,
-              enrollmentNo: response.data.user.enrollmentNo,
+              fullname: `${response.data.admind.firstName} ${response.data.admind.middleName} ${response.data.admind.lastName}`,
+              semester: response.data.admind.semester,
+              enrollmentNo: response.data.admind.enrollmentNo,
               // branch: response.data.user[0].branch,
             })
           );

@@ -28,12 +28,12 @@ const Profile = () => {
       )
       .then((response) => {
         if (response.data.success) {
-          setData(response.data.user);
+          setData(response.data.studentd);
           dispatch(
             setUserData({
-              fullname: `${response.data.user.firstName} ${response.data.user.middleName} ${response.data.user.lastName}`,
-              class: response.data.user.class,
-              enrollmentNo: response.data.user.enrollmentNo
+              fullname: `${response.data.studentd.firstName} ${response.data.studentd.middleName} ${response.data.studentd.lastName}`,
+              class: response.data.studentd.classn,
+              enrollmentNo: response.data.studentd.enrollmentNo
             })
           );
         } else {
@@ -111,7 +111,7 @@ const Profile = () => {
               </p>
               {/* <p className="text-lg font-normal mb-2">Branch: {data.branch}</p> */}
               <p className="text-lg font-normal mb-2">
-                Class: {data.class}
+                Class: {data.classn}
               </p>
               <p className="text-lg font-normal mb-2">
                 Phone Number: +91 {data.phoneNumber}

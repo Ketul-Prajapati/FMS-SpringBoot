@@ -28,11 +28,11 @@ const Profile = () => {
       )
       .then((response) => {
         if (response.data.success) {
-          setData(response.data.user);
+          setData(response.data.facultyd);
           dispatch(
             setUserData({
-              fullname: `${response.data.user.firstName} ${response.data.user.middleName} ${response.data.user.lastName}`,
-              employeeId: response.data.user.employeeId,
+              fullname: `${response.data.facultyd.facultyd} ${response.data.facultyd.middleName} ${response.data.facultyd.lastName}`,
+              employeeId: response.data.facultyd.employeeId,
             })
           );
         } else {
@@ -102,19 +102,19 @@ const Profile = () => {
         <>
           <div>
             <p className="text-2xl font-semibold">
-              Hello {data[0].firstName} {data[0].middleName} {data[0].lastName}{" "}
+              Hello {data.firstName} {data.middleName} {data.lastName}{" "}
               👋
             </p>
             <div className="mt-3">
               <p className="text-lg font-normal mb-2">
-                Employee Id: {data[0].employeeId}
+                Employee Id: {data.employeeId}
               </p>
-              <p className="text-lg font-normal mb-2">Post: {data[0].post}</p>
+              <p className="text-lg font-normal mb-2">Post: {data.post}</p>
               <p className="text-lg font-normal mb-2">
-                Email Id: {data[0].email}
+                Email Id: {data.email}
               </p>
               <p className="text-lg font-normal mb-2">
-                Phone Number: {data[0].phoneNumber}
+                Phone Number: {data.phoneNumber}
               </p>
               {/* <p className="text-lg font-normal mb-2">
                 Department: {data[0].department}
@@ -162,7 +162,7 @@ const Profile = () => {
             )}
           </div>
           <img
-            src={data[0].profile}
+            src={data.profile}
             alt="faculty profile"
             className="h-[15%] w-[15%] object-cover rounded-lg shadow-md"
           />
