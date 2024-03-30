@@ -31,8 +31,8 @@ const Profile = () => {
           setData(response.data.user);
           dispatch(
             setUserData({
-              fullname: `${response.data.user[0].firstName} ${response.data.user[0].middleName} ${response.data.user[0].lastName}`,
-              employeeId: response.data.user[0].employeeId,
+              fullname: `${response.data.user.firstName} ${response.data.user.middleName} ${response.data.user.lastName}`,
+              employeeId: response.data.user.employeeId,
             })
           );
         } else {

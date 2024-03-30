@@ -28,12 +28,12 @@ const Profile = () => {
       )
       .then((response) => {
         if (response.data.success) {
-          setData(response.data.user[0]);
+          setData(response.data.user);
           dispatch(
             setUserData({
-              fullname: `${response.data.user[0].firstName} ${response.data.user[0].middleName} ${response.data.user[0].lastName}`,
-              class: response.data.user[0].class,
-              enrollmentNo: response.data.user[0].enrollmentNo
+              fullname: `${response.data.user.firstName} ${response.data.user.middleName} ${response.data.user.lastName}`,
+              class: response.data.user.class,
+              enrollmentNo: response.data.user.enrollmentNo
             })
           );
         } else {
