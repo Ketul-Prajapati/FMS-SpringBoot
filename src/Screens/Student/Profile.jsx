@@ -20,7 +20,7 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/${router.state.type}/details/getDetails`,
+        `${baseApiURL()}/${router.state.type.toLowerCase()}/details/getDetails`,
         { enrollmentNo: router.state.loginid },
         {
           headers: headers,
