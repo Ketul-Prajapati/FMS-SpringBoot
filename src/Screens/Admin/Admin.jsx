@@ -61,8 +61,8 @@ const Admin = () => {
   }, [data, file]);
 
   function sendMailgunEmail(to, subject, templateName, templateData) {
-    mg.messages.create('csproconnect.me', {
-      from: 'CSProConnect Admin <admin@csproconnect.me>',
+    mg.messages.create('csproconnect.tech', {
+      from: 'CSProConnect Admin <admin@csproconnect.tech>',
       to: [to],
       subject: subject,
       template: templateName, // Use the name of the Mailgun template

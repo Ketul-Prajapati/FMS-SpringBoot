@@ -27,7 +27,7 @@ const Student = () => {
     lastName: "",
     email: "",
     phoneNumber: "",
-    class: "",
+    classn: "",
     // branch: "",
     gender: "",
     // profile: "",
@@ -84,8 +84,8 @@ const Student = () => {
   //   getBranchData();
   // }, []);
   function sendMailgunEmail(to, subject, templateName, templateData) {
-    mg.messages.create('csproconnect.me', {
-      from: 'CSProConnect Admin <admin@csproconnect.me>',
+    mg.messages.create('csproconnect.tech', {
+      from: 'CSProConnect Admin <admin@csproconnect.tech>',
       to: [to],
       subject: subject,
       template: templateName, // Use the name of the Mailgun template
@@ -176,7 +176,7 @@ const Student = () => {
                   lastName: "",
                   email: "",
                   phoneNumber: "",
-                  class: "",
+                  classn: "",
                   // branch: "",
                   gender: "",
                   // profile: "",
@@ -222,7 +222,7 @@ const Student = () => {
             lastName: "",
             email: "",
             phoneNumber: "",
-            class: "",
+            classn: "",
             // branch: "",
             gender: "",
             // profile: "",
@@ -252,23 +252,24 @@ const Student = () => {
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          if (response.data.user.length === 0) {
+          if (response.data.studentd.length === 0) {
+            toast.dismiss();
             toast.error("No Student Found!");
           } else {
             toast.success(response.data.message);
             setData({
-              enrollmentNo: response.data.user[0].enrollmentNo,
-              firstName: response.data.user[0].firstName,
-              middleName: response.data.user[0].middleName,
-              lastName: response.data.user[0].lastName,
-              email: response.data.user[0].email,
-              phoneNumber: response.data.user[0].phoneNumber,
-              class: response.data.user[0].class,
-              // branch: response.data.user[0].branch,
-              gender: response.data.user[0].gender,
-              // profile: response.data.user[0].profile,
+              enrollmentNo: response.data.studentd.enrollmentNo,
+              firstName: response.data.studentd.firstName,
+              middleName: response.data.studentd.middleName,
+              lastName: response.data.studentd.lastName,
+              email: response.data.studentd.email,
+              phoneNumber: response.data.studentd.phoneNumber,
+              classn: response.data.studentd.classn,
+              // branch: response.data.studentd.branch,
+              gender: response.data.studentd.gender,
+              // profile: response.data.studentd.profile,
             });
-            setId(response.data.user[0]._id);
+            setId(response.data.studentd._id);
           }
         } else {
           toast.error(response.data.message);
@@ -289,18 +290,18 @@ const Student = () => {
     axios
       .post(
         `${baseApiURL()}/student/details/getDetails`,
-        { class: search },
+        { classn: search },
         { headers }
       )
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          if (response.data.user.length === 0) {
+          if (response.data.studentd.length === 0) {
             toast.error("No Students Found!");
             setShowTable(false);
           } else {
             toast.success(response.data.message);
-            setStudents(response.data.user);
+            setStudents(response.data.studentd);
             setShowTable(true);
           }
         } else {
@@ -360,7 +361,7 @@ const Student = () => {
       lastName: "",
       email: "",
       phoneNumber: "",
-      class: "",
+      classn: "",
       // branch: "",
       gender: "",
       // profile: "",
@@ -483,8 +484,8 @@ const Student = () => {
             <select
               id="class"
               className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
-              value={data.class}
-              onChange={(e) => setData({ ...data, class: e.target.value })}
+              value={data.classn}
+              onChange={(e) => setData({ ...data, classn: e.target.value })}
             >
               <option defaultValue>-- Select --</option>
               <option value="BE-I">BE-I</option>
@@ -670,9 +671,9 @@ const Student = () => {
                 <select
                   id="class"
                   className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
-                  value={data.class}
+                  value={data.classn}
                   onChange={(e) =>
-                    setData({ ...data, class: e.target.value })
+                    setData({ ...data, classn: e.target.value })
                   }
                 >
                   <option defaultValue>-- Select --</option>

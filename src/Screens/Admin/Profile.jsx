@@ -86,14 +86,14 @@ const Profile = () => {
       )
       .then((response) => {
         if (response.data.success) {
-          toast.success(response.data.message);
+          toast.success(response.data.id);
           setPassword({ new: "", current: "" });
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.id);
         }
       })
       .catch((error) => {
-        toast.error(error.response.data.message);
+        toast.error(error.response.data.id);
         console.error(error);
       });
   };
