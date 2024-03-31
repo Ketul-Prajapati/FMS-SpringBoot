@@ -27,11 +27,11 @@ const Notice = () => {
     let data = {};
     if (router.pathname.replace("/", "") === "student") {
       data = {
-        type: ["student", "both"],
+        typelist: ["student", "both"],
       };
     } else {
       data = {
-        type: ["student", "both", "faculty"],
+        typelist: ["student", "both", "faculty"],
       };
     }
     const headers = {
@@ -43,7 +43,7 @@ const Notice = () => {
       })
       .then((response) => {
         if (response.data.success) {
-          setNotice(response.data.notice);
+          setNotice(response.data.notices);
         } else {
           toast.error(response.data.message);
         }
@@ -58,11 +58,11 @@ const Notice = () => {
     let data = {};
     if (router.pathname.replace("/", "") === "student") {
       data = {
-        type: ["student", "both"],
+        typelist: ["student", "both"],
       };
     } else {
       data = {
-        type: ["student", "both", "faculty"],
+        typelist: ["student", "both", "faculty"],
       };
     }
     const headers = {
@@ -74,7 +74,7 @@ const Notice = () => {
       })
       .then((response) => {
         if (response.data.success) {
-          setNotice(response.data.notice);
+          setNotice(response.data.notices);
         } else {
           toast.error(response.data.message);
         }
@@ -141,7 +141,7 @@ const Notice = () => {
       "Content-Type": "application/json",
     };
     axios
-      .post(`${baseApiURL()}/notice/updateNotice/${id}`, data, {
+      .put(`${baseApiURL()}/notice/updateNotice/${id}`, data, {
         headers: headers,
       })
       .then((response) => {
@@ -169,7 +169,7 @@ const Notice = () => {
       type: notice[index].type,
       link: notice[index].link,
     });
-    setId(notice[index]._id);
+    setId(notice[index].id);
   };
 
   const openHandler = () => {
@@ -211,7 +211,7 @@ const Notice = () => {
             notice.map((item, index) => {
               return (
                 <div
-                  key={item._id}
+                  key={item.id}
                   className="border-blue-500 border-2 w-full rounded-md shadow-sm py-4 px-6 mb-4 relative"
                 >
                   {(router.pathname === "/faculty" ||
@@ -222,7 +222,7 @@ const Notice = () => {
                       </span>
                       <span
                         className="text-2xl group-hover:text-blue-500 ml-2 cursor-pointer hover:text-red-500"
-                        onClick={() => deleteNoticehandler(item._id)}
+                        onClick={() => deleteNoticehandler(item.id)}
                       >
                         <MdDeleteOutline />
                       </span>

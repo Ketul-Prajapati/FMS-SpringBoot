@@ -15,6 +15,7 @@ const Subjects = () => {
   const [search, setSearch] = useState();
   const [selected, setSelected] = useState("add");
   const [subject, setSubject] = useState();
+  // const [id, setId] = useState("");
 
   const getSubjectHandler = (e) => {
     // e.preventDefault();
@@ -27,13 +28,13 @@ const Subjects = () => {
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          if(response.data.subject.length === 0) {
+          if(response.data.data.length === 0) {
             toast.error("No Subject Found!");
             setSubject();
           }
           else{
             toast.success(response.data.message);
-            setSubject(response.data.subject);
+            setSubject(response.data.data);
           }
         } else {
           toast.error(response.data.message);
@@ -217,7 +218,7 @@ const Subjects = () => {
                     </div>
                     <button
                       className="text-2xl hover:text-red-500"
-                      onClick={() => deleteSubjectHandler(item._id)}
+                      onClick={() => deleteSubjectHandler(item.id)}
                     >
                       <MdOutlineDelete />
                     </button>

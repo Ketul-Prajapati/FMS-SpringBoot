@@ -237,10 +237,10 @@ const Faculty = () => {
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          toast.success(response.data.message);
-          setFile();
-          setSearch();
-          setId();
+          toast.success(response.data.id);
+          // setFile();
+          setSearch("");
+          setId("");
           setData({
             employeeId: "",
             firstName: "",
@@ -255,12 +255,12 @@ const Faculty = () => {
             profile: "",
           });
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.id);
         }
       })
       .catch((error) => {
         toast.dismiss();
-        toast.error(error.response.data.message);
+        toast.error(error.response.data.id);
       });
   };
 
@@ -311,18 +311,18 @@ const Faculty = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/faculty/details/getDetails`, { __v: 0 },
+        `${baseApiURL()}/faculty/details/getDetails`, { _class: "me.csproconnect.backend.model.facultymodel.FacultyDetails" },
         { headers }
       )
       .then((response) => {
         toast.dismiss();
         console.log(response.data)
         if (response.data.success) {
-          if (response.data.facultyd.length === 0) {
+          if (response.data.lfacultyd.length === 0) {
             toast.error("No Faculty Found!");
           } else {
             toast.success(response.data.message);
-            setFaculty(response.data.facultyd);
+            setFaculty(response.data.lfacultyd);
           }
         } else {
           toast.error(response.data.message);
