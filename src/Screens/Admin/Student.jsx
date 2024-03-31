@@ -269,7 +269,7 @@ const Student = () => {
               gender: response.data.studentd.gender,
               // profile: response.data.studentd.profile,
             });
-            setId(response.data.studentd._id);
+            setId(response.data.studentd.id);
           }
         } else {
           toast.error(response.data.message);
@@ -296,12 +296,12 @@ const Student = () => {
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          if (response.data.studentd.length === 0) {
+          if (response.data.studentsInClass.length === 0) {
             toast.error("No Students Found!");
             setShowTable(false);
           } else {
             toast.success(response.data.message);
-            setStudents(response.data.studentd);
+            setStudents(response.data.studentsInClass);
             setShowTable(true);
           }
         } else {

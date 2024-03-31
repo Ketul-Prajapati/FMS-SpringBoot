@@ -280,19 +280,19 @@ const Faculty = () => {
         toast.dismiss();
         if (response.data.success) {
           toast.success(response.data.message);
-          setId(response.data.user[0]._id);
+          setId(response.data.facultyd.id);
           setData({
-            employeeId: response.data.user[0].employeeId,
-            firstName: response.data.user[0].firstName,
-            middleName: response.data.user[0].middleName,
-            lastName: response.data.user[0].lastName,
-            email: response.data.user[0].email,
-            phoneNumber: response.data.user[0].phoneNumber,
-            post: response.data.user[0].post,
-            // department: response.data.user[0].department,
-            gender: response.data.user[0].gender,
-            profile: response.data.user[0].profile,
-            experience: response.data.user[0].experience,
+            employeeId: response.data.facultyd.employeeId,
+            firstName: response.data.facultyd.firstName,
+            middleName: response.data.facultyd.middleName,
+            lastName: response.data.facultyd.lastName,
+            email: response.data.facultyd.email,
+            phoneNumber: response.data.facultyd.phoneNumber,
+            post: response.data.facultyd.post,
+            // department: response.data.facultyd.department,
+            gender: response.data.facultyd.gender,
+            profile: response.data.facultyd.profile,
+            experience: response.data.facultyd.experience,
           });
         } else {
           toast.error(response.data.message);
@@ -318,11 +318,11 @@ const Faculty = () => {
         toast.dismiss();
         console.log(response.data)
         if (response.data.success) {
-          if (response.data.user.length === 0) {
+          if (response.data.facultyd.length === 0) {
             toast.error("No Faculty Found!");
           } else {
             toast.success(response.data.message);
-            setFaculty(response.data.user);
+            setFaculty(response.data.facultyd);
           }
         } else {
           toast.error(response.data.message);
