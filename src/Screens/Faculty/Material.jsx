@@ -22,11 +22,12 @@ const Material = () => {
   useEffect(() => {
     toast.loading("Loading Subjects");
     axios
-      .post(`${baseApiURL()}/subject/getSubject`)
+      .get(`${baseApiURL()}/subject/getAllSubjects`)
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          setSubject(response.data.subject);
+          toast.success("All Subjects Loaded !!");
+          setSubject(response.data.data);
         } else {
           toast.error(response.data.message);
         }
@@ -38,35 +39,39 @@ const Material = () => {
   }, []);
 
   useEffect(() => {
-    const uploadFileToStorage = async (file) => {
-      toast.loading("Upload Material To Storage");
-      const storageRef = ref(
-        storage,
-        `Material/${selected.subject}/${selected.title} - ${selected.faculty}`
-      );
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {},
-        (error) => {
-          console.error(error);
-          toast.dismiss();
-          toast.error("Something Went Wrong!");
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      const uploadFileToStorage = async (file) => {
+        toast.loading("Upload Material To Storage");
+        const storageRef = ref(
+          storage,
+          `Material/${selected.subject}/${selected.title} - ${selected.faculty}`
+        );
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {},
+          (error) => {
+            console.error(error);
             toast.dismiss();
-            setFile();
-            toast.success("Material Uploaded To Storage");
-            setSelected({ ...selected, link: downloadURL });
-          });
-        }
-      );
-    };
-    file && uploadFileToStorage(file);
+            toast.error("Something Went Wrong!");
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              toast.dismiss();
+              setFile();
+              toast.success("Material Uploaded To Storage");
+              setSelected({ ...selected, link: downloadURL });
+            });
+          }
+        );
+      };
+      file && uploadFileToStorage(file);
+    
   }, [file,selected]);
 
   const addMaterialHandler = () => {
+    if(selected.subject==="select" || selected.subject==="" || selected.title === "" || selected.faculty==="" || selected.link==""){
+      toast.error("Please provide all informations !!");
+    }else{
     toast.loading("Adding Material");
     const headers = {
       "Content-Type": "application/json",
@@ -94,6 +99,7 @@ const Material = () => {
         toast.dismiss();
         toast.error(error.response.data.message);
       });
+    }
   };
   return (
     <div className="w-[85%] mx-auto mt-10 flex justify-center items-start flex-col mb-10">
