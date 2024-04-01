@@ -22,11 +22,13 @@ const Marks = () => {
         }
       )
       .then((response) => {
-        if (response.data) {
-          if(response.data.Mark.length===0){
-            setInternal(response.data.Mark);
+        if (response.data.success) {
+          if(response.data.data.internal.length!=0){
+            setInternal(response.data.data.internal);
           }
-          else { setInternal(response.data.Mark[0].internal)}
+
+        }else{
+          setInternal("");
         }
       })
       .catch((error) => {
@@ -60,7 +62,7 @@ const Marks = () => {
           </div>
         )}
 
-        {internal && internal.length===0 && <p>No Marks Available At The Moment!</p>}
+        {internal === "" && <p>No Marks Available At The Moment!</p>}
       </div>
     </div>
   );

@@ -313,7 +313,8 @@ const Faculty = () => {
           });
         } else {
           toast.error(response.data.id);
-          setId();
+          setId("");
+          setSearch("");
         }
       })
       .catch((error) => {

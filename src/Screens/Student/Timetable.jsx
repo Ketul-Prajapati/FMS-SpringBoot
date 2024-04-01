@@ -18,7 +18,7 @@ const Timetable = () => {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [1, 2] },
+            { semList: [1, 2] },
             {
               headers: headers,
             }
@@ -38,7 +38,7 @@ const Timetable = () => {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [3, 4] },
+            { semList: [3, 4] },
             {
               headers: headers,
             }
@@ -58,15 +58,15 @@ const Timetable = () => {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [5, 6] },
+            { semList: [5, 6] },
             {
               headers: headers,
             }
           )
           .then((response) => {
-            if (response.data) {
+            if (response.data.success) {
               // console.log(response.data)
-              setTimetable(response.data);
+              setTimetable(response.data.timetable);
             }
           })
           .catch((error) => {
@@ -78,7 +78,7 @@ const Timetable = () => {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [7, 8] },
+            { semList: [7, 8] },
             {
               headers: headers,
             }
@@ -98,7 +98,7 @@ const Timetable = () => {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [1, 2] },
+            { semList: [1, 2] },
             {
               headers: headers,
             }
@@ -118,7 +118,7 @@ const Timetable = () => {
         axios
           .post(
             `${baseApiURL()}/timetable/getTimetable`,
-            { semester: [3, 4] },
+            { semList: [3, 4] },
             {
               headers: headers,
             }
@@ -144,7 +144,7 @@ const Timetable = () => {
         <Heading title={`Timetable of ${userData.class}`} />
         <p
           className="flex justify-center items-center text-lg font-medium cursor-pointer hover:text-red-500 hover:scale-110 ease-linear transition-all duration-200 hover:duration-200 hover:ease-linear hover:transition-all"
-          onClick={() => { if (timetable[0]) { window.open(timetable[0].link) } if (timetable[1]) { window.open(timetable[1].link) } }}
+          onClick={() => { if (timetable[0] != null) { window.open(timetable[0].link) } if (timetable[1]!= null) { window.open(timetable[1].link) } }}
         >
           Download
           <span className="ml-2">
