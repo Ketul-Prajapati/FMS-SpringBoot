@@ -17,35 +17,42 @@ function Attendance() {
   // Updated searchStudentHandler to fix setting state
   const searchStudentHandler = (e) => {
     e.preventDefault();
-    toast.loading("Getting students list");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(
-        `${baseApiURL()}/student/details/getDetails`,
-        { class: search },
-        { headers }
-      )
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          if (response.data.user.length === 0) {
-            toast.error("No Students Found!");
-            setShowTable(false);
+    if(search === "-- Select Class --" || search ===""){
+      toast.error("Please select the class !!");
+      setShowTable(false);
+    }
+    else{
+      toast.loading("Getting students list");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(
+          `${baseApiURL()}/student/details/getDetails`,
+          { classn: search },
+          { headers }
+        )
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            if (response.data.studentsInClass.length === 0) {
+              toast.error("No Students Found!");
+              setShowTable(false);
+            } else {
+              toast.success(response.data.message);
+              setStudents(response.data.studentsInClass);
+              setShowTable(true);
+            }
           } else {
-            toast.success(response.data.message);
-            setStudents(response.data.user);
-            setShowTable(true);
+            toast.error(response.data.id);
+            setShowTable(false);
           }
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-        console.error(error);
-      });
+        })
+        .catch((error) => {
+          toast.error(error.response.data.id);
+          console.error(error);
+        });
+    }
   };
 
   const handleAttendanceChange = (index) => {
@@ -56,7 +63,7 @@ function Attendance() {
 
   const exportFileName = () => {
     const currentDateTime = dayjs().format("DD-MM-YYYY HH:mm");
-    return `${search}_Attendance_${currentDateTime}`;
+    return `${students[0].classn}_Attendance_${currentDateTime}`;
   };
 
   const handleDownloadExcel = () => {
@@ -80,7 +87,7 @@ function Attendance() {
       const doc = new jsPDF.default();
       doc.setFont("helvetica"); // Set font type
       doc.setFontSize(12); // Set font size
-      const pdfTitle = `Attendance Of Class ${search} - ${dayjs().format("DD-MM-YYYY HH:mm")}`;
+      const pdfTitle = `Attendance Of Class ${students[0].classn} - ${dayjs().format("DD-MM-YYYY HH:mm")}`;
       doc.text(pdfTitle, 60, 10);
       const columns = ["SR NO","PRN", "NAME", "PRESENT/ABSENT"];
       const rows = students.map((student,index) => [

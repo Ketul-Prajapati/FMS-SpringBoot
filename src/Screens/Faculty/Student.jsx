@@ -19,7 +19,7 @@ const Student = () => {
     lastName: "",
     email: "",
     phoneNumber: "",
-    class: "",
+    classn: "",
     // branch: "",
     gender: "",
     profile: "",
@@ -35,7 +35,7 @@ const Student = () => {
       lastName: "",
       email: "",
       phoneNumber: "",
-      class: "",
+      classn: "",
       // branch: "",
       gender: "",
       profile: "",
@@ -54,26 +54,28 @@ const Student = () => {
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          if (response.data.user.length === 0) {
+          if (response.data.studentd.length === 0) { 
             toast.error("No Student Found!");
           } else {
             toast.success(response.data.message);
             setData({
-              enrollmentNo: response.data.user[0].enrollmentNo,
-              firstName: response.data.user[0].firstName,
-              middleName: response.data.user[0].middleName,
-              lastName: response.data.user[0].lastName,
-              email: response.data.user[0].email,
-              phoneNumber: response.data.user[0].phoneNumber,
-              class: response.data.user[0].class,
-              // branch: response.data.user[0].branch,
-              gender: response.data.user[0].gender,
-              profile: response.data.user[0].profile,
+               enrollmentNo: response.data.studentd.enrollmentNo,
+                firstName: response.data.studentd.firstName,
+                middleName: response.data.studentd.middleName,
+                lastName: response.data.studentd.lastName,
+                email: response.data.studentd.email,
+                phoneNumber: response.data.studentd.phoneNumber,
+                classn: response.data.studentd.classn,
+                // branch: response.data.studentd.branch,
+                gender: response.data.studentd.gender,
+                // profile: response.data.studentd.profile,
             });
-            setId(response.data.user[0]._id);
+            setId(response.data.studentd.id);
           }
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.id);
+          setId("");
+          setSearch("");
         }
       })
       .catch((error) => {
@@ -84,35 +86,42 @@ const Student = () => {
 
   const viewStudentHandler = (e) => {
     e.preventDefault();
-    toast.loading("Getting students list");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(
-        `${baseApiURL()}/student/details/getDetails`,
-        { class: search },
-        { headers }
-      )
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          if (response.data.user.length === 0) {
-            toast.error("No Students Found!");
-            setShowTable(false);
+    if(search === "-- Select Class --" || search === "")
+    {
+      setShowTable(false);
+      toast.error("Please select the class !!");
+    }else{
+      toast.loading("Getting students list");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(
+          `${baseApiURL()}/student/details/getDetails`,
+          { classn: search },
+          { headers }
+        )
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            if (response.data.studentsInClass.length === 0) {
+              toast.error("No Students Found!");
+              setShowTable(false);
+            } else {
+              toast.success(response.data.message);
+              setStudents(response.data.studentsInClass);
+              setShowTable(true);
+            }
           } else {
-            toast.success(response.data.message);
-            setStudents(response.data.user);
-            setShowTable(true);
+            toast.error(response.data.id);
+            setShowTable(false);
           }
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-        console.error(error);
-      });
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+          console.error(error);
+        });
+    }
   };
 
   const handleDownloadExcel = () => {
@@ -162,7 +171,7 @@ const Student = () => {
       lastName: "",
       email: "",
       phoneNumber: "",
-      class: "",
+      classn: "",
       // branch: "",
       gender: "",
       profile: "",
@@ -224,7 +233,7 @@ const Student = () => {
                     Email Address: {data.email}
                   </p>
                   <p className="text-lg font-normal mb-2">
-                    Class: {data.class}
+                    Class: {data.classn}
                   </p>
                 </div>
               </div>
@@ -299,7 +308,7 @@ const Student = () => {
                           Email Address: {item.email}
                         </p>
                         <p className="text-lg font-normal mb-2">
-                          Class: {item.class}
+                          Class: {item.classn}
                         </p>
                       </div>
                     </div>

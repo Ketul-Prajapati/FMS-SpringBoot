@@ -23,84 +23,89 @@ const Marks = () => {
     // examType: "",
   });
   const loadStudentDetails = () => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    if (search === '1' || search === '2') {
-      axios
-        .post(
-          `${baseApiURL()}/student/details/getDetails`,
-          { class: 'BE-I' },
-          { headers }
-        )
-        .then((response) => {
-          if (response.data.success) {
-            setStudentData(response.data.user);
-          } else {
-            toast.error(response.data.message);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          toast.error(error.message);
-        });
+    if(selected.subject ==="-- Select --" || selected.subject === ""){
+      toast.error("Please select the subject !!");
     }
-    else if (search === '3' || search === '4') {
-      axios
-        .post(
-          `${baseApiURL()}/student/details/getDetails`,
-          { class: 'BE-II' },
-          { headers }
-        )
-        .then((response) => {
-          if (response.data.success) {
-            setStudentData(response.data.user);
-          } else {
-            toast.error(response.data.message);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          toast.error(error.message);
-        });
-    }
-    else if (search === '5' || search === '6') {
-      axios
-        .post(
-          `${baseApiURL()}/student/details/getDetails`,
-          { class: 'BE-III' },
-          { headers }
-        )
-        .then((response) => {
-          if (response.data.success) {
-            setStudentData(response.data.user);
-          } else {
-            toast.error(response.data.message);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          toast.error(error.message);
-        });
-    }
-    else if (search === '7' || search === '8') {
-      axios
-        .post(
-          `${baseApiURL()}/student/details/getDetails`,
-          { class: 'BE-IV' },
-          { headers }
-        )
-        .then((response) => {
-          if (response.data.success) {
-            setStudentData(response.data.user);
-          } else {
-            toast.error(response.data.message);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          toast.error(error.message);
-        });
+    else{
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      if (search === '1' || search === '2') {
+        axios
+          .post(
+            `${baseApiURL()}/student/details/getDetails`,
+            { classn: 'BE-I' },
+            { headers }
+          )
+          .then((response) => {
+            if (response.data.success) {
+              setStudentData(response.data.studentsInClass);
+            } else {
+              toast.error(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            toast.error(error.message);
+          });
+      }
+      else if (search === '3' || search === '4') {
+        axios
+          .post(
+            `${baseApiURL()}/student/details/getDetails`,
+            { classn: 'BE-II' },
+            { headers }
+          )
+          .then((response) => {
+            if (response.data.success) {
+              setStudentData(response.data.studentsInClass);
+            } else {
+              toast.error(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            toast.error(error.message);
+          });
+      }
+      else if (search === '5' || search === '6') {
+        axios
+          .post(
+            `${baseApiURL()}/student/details/getDetails`,
+            { classn: 'BE-III' },
+            { headers }
+          )
+          .then((response) => {
+            if (response.data.success) {
+              setStudentData(response.data.studentsInClass);
+            } else {
+              toast.error(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            toast.error(error.message);
+          });
+      }
+      else if (search === '7' || search === '8') {
+        axios
+          .post(
+            `${baseApiURL()}/student/details/getDetails`,
+            { classn: 'BE-IV' },
+            { headers }
+          )
+          .then((response) => {
+            if (response.data.success) {
+              setStudentData(response.data.studentsInClass);
+            } else {
+              toast.error(response.data.message);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            toast.error(error.message);
+          });
+      }
     }
   };
 
@@ -324,29 +329,35 @@ const Marks = () => {
 
   useEffect(() => {
     if (selectedSemester) {
-      const getSubjectData = async (e) => {
-        const headers = {
-          "Content-Type": "application/json",
+      if(selectedSemester==="-- Select --" || selectedSemester === ""){
+        toast.error("Please select the semester !!");
+      }
+      else{
+        const getSubjectData = async (e) => {
+          const headers = {
+            "Content-Type": "application/json",
+          };
+          toast.loading("Loading Subjects");
+          axios
+            .post(`${baseApiURL()}/subject/getSubject`, { semester: search }, { headers })
+            .then((response) => {
+              toast.dismiss();
+              if (response.data.success) {
+                toast.success(response.data.message);
+                setSubject(response.data.data);
+              } else {
+                setSubject();
+                toast.error(response.data.message);
+              }
+            })
+            .catch((error) => {
+              toast.dismiss();
+              toast.error(error.message);
+            });
         };
-        toast.loading("Loading Subjects");
-        axios
-          .post(`${baseApiURL()}/subject/getSubject`, { semester: search }, { headers })
-          .then((response) => {
-            toast.dismiss();
-            if (response.data.success) {
-              setSubject(response.data.subject);
-            } else {
-              setSubject();
-              toast.error(response.data.message);
-            }
-          })
-          .catch((error) => {
-            toast.dismiss();
-            toast.error(error.message);
-          });
-      };
-
-      getSubjectData();
+  
+        getSubjectData();
+      }
     }
   }, [selectedSemester, search]);
 

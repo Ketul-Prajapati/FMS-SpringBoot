@@ -50,32 +50,37 @@ const Timetable = () => {
   }, [addselected]);
 
   useEffect(() => {
-    const uploadFileToStorage = async (file) => {
-      toast.loading("Upload Timetable To Server");
-      const storageRef = ref(
-        storage,
-        `Timetable/Semester ${addselected.semester}`
-      );
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {},
-        (error) => {
-          console.error(error);
-          toast.dismiss();
-          // toast.error("Something Went Wrong!");
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+    if(addselected.semester==="-- Select Semester --" || addselected===""){
+      toast.error("Please select the semester !!");
+    }
+    else{
+      const uploadFileToStorage = async (file) => {
+        toast.loading("Upload Timetable To Server");
+        const storageRef = ref(
+          storage,
+          `Timetable/Semester ${addselected.semester}`
+        );
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {},
+          (error) => {
+            console.error(error);
             toast.dismiss();
-            setFile();
-            toast.success("Timetable Uploaded To Server");
-            setAddSelected({ ...addselected, link: downloadURL });
-          });
-        }
-      );
-    };
-    file && uploadFileToStorage(file);
+            // toast.error("Something Went Wrong!");
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              toast.dismiss();
+              setFile();
+              toast.success("Timetable Uploaded To Server");
+              setAddSelected({ ...addselected, link: downloadURL });
+            });
+          }
+        );
+      };
+      file && uploadFileToStorage(file);
+    }
   }, [file,addselected]);
 
   // const getBranchData = () => {
