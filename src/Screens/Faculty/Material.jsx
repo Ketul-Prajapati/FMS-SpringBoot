@@ -36,7 +36,7 @@ const Material = () => {
         toast.dismiss();
         toast.error(error.message);
       });
-  }, []);
+  }, []); 
 
   useEffect(() => {
       const uploadFileToStorage = async (file) => {

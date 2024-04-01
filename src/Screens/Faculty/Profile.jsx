@@ -31,7 +31,7 @@ const Profile = () => {
           setData(response.data.facultyd);
           dispatch(
             setUserData({
-              fullname: `${response.data.facultyd.facultyd} ${response.data.facultyd.middleName} ${response.data.facultyd.lastName}`,
+              fullname: `${response.data.facultyd.firstName} ${response.data.facultyd.middleName} ${response.data.facultyd.lastName}`,
               employeeId: response.data.facultyd.employeeId,
             })
           );
