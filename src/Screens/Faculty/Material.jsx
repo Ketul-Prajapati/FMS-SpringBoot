@@ -69,7 +69,7 @@ const Material = () => {
   }, [file,selected]);
 
   const addMaterialHandler = () => {
-    if(selected.subject==="select" || selected.subject==="" || selected.title === "" || selected.faculty==="" || selected.link==""){
+    if(selected.subject==="select" || selected.subject==="" || selected.title === "" || selected.faculty==="" || selected.link===""){
       toast.error("Please provide all informations !!");
     }else{
     toast.loading("Adding Material");
