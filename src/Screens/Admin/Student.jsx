@@ -290,8 +290,9 @@ const Student = () => {
               setId(response.data.studentd.id);
             }
           } else {
-            toast.error(response.data.message);
-            setId();
+            toast.error(response.data.id);
+            setId("");
+            setSearch("");
           }
         })
         .catch((error) => {
@@ -305,6 +306,7 @@ const Student = () => {
     e.preventDefault();
     if(search === "-- Select Class --" || search === "")
 {
+  setShowTable(false);
   toast.error("Please select the class !!");
 }
 else{
@@ -330,7 +332,7 @@ else{
           setShowTable(true);
         }
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.id);
         setShowTable(false);
       }
     })
