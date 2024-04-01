@@ -122,81 +122,94 @@ const Student = () => {
 
   const addStudentProfile = (e) => {
     e.preventDefault();
-    toast.loading("Adding Student");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(`${baseApiURL()}/student/details/addDetails`, data, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          const password = generateRandomPassword();
-          const templateName = 'successful registration'; // Replace with the name of your Mailgun template
-          const templateData ={
-            // Define variables used in your template
-            'recipientName': data.firstName+' '+data.lastName,
-            'username': data.enrollmentNo,
-            'password': password
-          };
-          sendLoginCredentials(data.email, templateName, templateData); // Implement this function
-          // const mailgun = require("mailgun-js");
-          // const DOMAIN = "csproconnect.me";
-          // const mg = mailgun({ apiKey: "ENTER_API_KEY_HERE", domain: DOMAIN });
-          // const data = {
-          //   from: "Mailgun Sandbox <postmaster@csproconnect.me>",
-          //   to: "himil3002@gmail.com",
-          //   subject: "Hello",
-          //   template: "successful registration",
-          //   'h:X-Mailgun-Variables': { test: "test" }
-          // };
-          // mg.messages().send(data, function (error, body) {
-          //   console.log(body);
-          // });
-          axios
-            .post(
-              `${baseApiURL()}/student/auth/register`,
-              { loginid: data.enrollmentNo, password },
-              {
-                headers: headers,
-              }
-            )
-            .then((response) => {
-              toast.dismiss();
-              if (response.data.success) {
-                toast.success(response.data.message);
-                // setFile();
-                setData({
-                  enrollmentNo: "",
-                  firstName: "",
-                  middleName: "",
-                  lastName: "",
-                  email: "",
-                  phoneNumber: "",
-                  classn: "",
-                  // branch: "",
-                  gender: "",
-                  // profile: "",
-                });
-              } else {
-                toast.error(response.data.message);
-              }
-            })
-            .catch((error) => {
-              toast.dismiss();
-              toast.error(error.response.data.message);
-            });
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
+    if(data.enrollmentNo === "" || 
+    data.firstName === "" ||
+    data.middleName === "" ||
+    data.lastName === "" ||
+    data.email === "" ||
+    data.phoneNumber === ""||
+    data.classn === "" ||
+    data.gender === ""){
+      toast.error("Please fill out all fields before adding the Student.");
+    }else{
+      toast.loading("Adding Student");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(`${baseApiURL()}/student/details/addDetails`, data, {
+          headers: headers,
+        })
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            const password = generateRandomPassword();
+            const templateName = 'successful registration'; // Replace with the name of your Mailgun template
+            const templateData ={
+              // Define variables used in your template
+              'recipientName': data.firstName+' '+data.lastName,
+              'username': data.enrollmentNo,
+              'password': password
+            };
+            sendLoginCredentials(data.email, templateName, templateData); // Implement this function
+            // const mailgun = require("mailgun-js");
+            // const DOMAIN = "csproconnect.me";
+            // const mg = mailgun({ apiKey: "ENTER_API_KEY_HERE", domain: DOMAIN });
+            // const data = {
+            //   from: "Mailgun Sandbox <postmaster@csproconnect.me>",
+            //   to: "himil3002@gmail.com",
+            //   subject: "Hello",
+            //   template: "successful registration",
+            //   'h:X-Mailgun-Variables': { test: "test" }
+            // };
+            // mg.messages().send(data, function (error, body) {
+            //   console.log(body);
+            // });
+            axios
+              .post(
+                `${baseApiURL()}/student/auth/register`,
+                { loginid: data.enrollmentNo, password },
+                {
+                  headers: headers,
+                }
+              )
+              .then((response) => {
+                toast.dismiss();
+                if (response.data.success) {
+                  toast.success(response.data.message);
+                  // setFile();
+                  setData({
+                    enrollmentNo: "",
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    email: "",
+                    phoneNumber: "",
+                    classn: "",
+                    // branch: "",
+                    gender: "",
+                    // profile: "",
+                  });
+                } else {
+                  toast.error(response.data.message);
+                }
+              })
+              .catch((error) => {
+                toast.dismiss();
+                toast.error(error.response.data.message);
+              });
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        });
+    }
+
+
   };
   const updateStudentProfile = (e) => {
     e.preventDefault();
@@ -239,79 +252,93 @@ const Student = () => {
 
   const searchStudentHandler = (e) => {
     e.preventDefault();
-    toast.loading("Getting Student");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(
-        `${baseApiURL()}/student/details/getDetails`,
-        { enrollmentNo: search },
-        { headers }
-      )
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          if (response.data.studentd.length === 0) {
-            toast.dismiss();
-            toast.error("No Student Found!");
+    if(search === ""){
+      toast.error("Please enter the PRN Number !!");
+    }
+    else{
+      toast.loading("Getting Student");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(
+          `${baseApiURL()}/student/details/getDetails`,
+          { enrollmentNo: search },
+          { headers }
+        )
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            if (response.data.studentd.length === 0) {
+              toast.dismiss();
+              toast.error("No Student Found!");
+              setId();
+            } else {
+              toast.success(response.data.message);
+              setData({
+                enrollmentNo: response.data.studentd.enrollmentNo,
+                firstName: response.data.studentd.firstName,
+                middleName: response.data.studentd.middleName,
+                lastName: response.data.studentd.lastName,
+                email: response.data.studentd.email,
+                phoneNumber: response.data.studentd.phoneNumber,
+                classn: response.data.studentd.classn,
+                // branch: response.data.studentd.branch,
+                gender: response.data.studentd.gender,
+                // profile: response.data.studentd.profile,
+              });
+              setId(response.data.studentd.id);
+            }
           } else {
-            toast.success(response.data.message);
-            setData({
-              enrollmentNo: response.data.studentd.enrollmentNo,
-              firstName: response.data.studentd.firstName,
-              middleName: response.data.studentd.middleName,
-              lastName: response.data.studentd.lastName,
-              email: response.data.studentd.email,
-              phoneNumber: response.data.studentd.phoneNumber,
-              classn: response.data.studentd.classn,
-              // branch: response.data.studentd.branch,
-              gender: response.data.studentd.gender,
-              // profile: response.data.studentd.profile,
-            });
-            setId(response.data.studentd.id);
+            toast.error(response.data.message);
+            setId();
           }
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-        console.error(error);
-      });
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+          console.error(error);
+        });
+    }
   };
 
   const viewStudentHandler = (e) => {
     e.preventDefault();
-    toast.loading("Getting students list");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(
-        `${baseApiURL()}/student/details/getDetails`,
-        { classn: search },
-        { headers }
-      )
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          if (response.data.studentsInClass.length === 0) {
-            toast.error("No Students Found!");
-            setShowTable(false);
-          } else {
-            toast.success(response.data.message);
-            setStudents(response.data.studentsInClass);
-            setShowTable(true);
-          }
+    if(search === "-- Select Class --" || search === "")
+{
+  toast.error("Please select the class !!");
+}
+else{
+  toast.loading("Getting students list");
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  axios
+    .post(
+      `${baseApiURL()}/student/details/getDetails`,
+      { classn: search },
+      { headers }
+    )
+    .then((response) => {
+      toast.dismiss();
+      if (response.data.success) {
+        if (response.data.studentsInClass.length === 0) {
+          toast.error("No Students Found!");
+          setShowTable(false);
         } else {
-          toast.error(response.data.message);
+          toast.success(response.data.message);
+          setStudents(response.data.studentsInClass);
+          setShowTable(true);
         }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-        console.error(error);
-      });
+      } else {
+        toast.error(response.data.message);
+        setShowTable(false);
+      }
+    })
+    .catch((error) => {
+      toast.error(error.response.data.message);
+      console.error(error);
+    });
+}    
   };
 
   const handleDownloadExcel = () => {

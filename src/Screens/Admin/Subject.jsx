@@ -17,18 +17,18 @@ const Subjects = () => {
   const [subject, setSubject] = useState();
   // const [id, setId] = useState("");
 
-  const getSubjectHandler = (e) => {
+  const getSubjectHandler = () => {
     // e.preventDefault();
     toast.loading("Getting Subjects");
     const headers = {
       "Content-Type": "application/json",
     };
     axios
-      .post(`${baseApiURL()}/subject/getSubject`,{ semester: search },{headers})
+      .post(`${baseApiURL()}/subject/getSubject`,{ semester: search },{headers : headers})
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          if(response.data.data.length === 0) {
+          if(response.data.data === null) {
             toast.error("No Subject Found!");
             setSubject();
           }
@@ -38,6 +38,7 @@ const Subjects = () => {
           }
         } else {
           toast.error(response.data.message);
+          setSubject();
         }
       })
       .catch((error) => {
@@ -46,28 +47,38 @@ const Subjects = () => {
   };
 
   const addSubjectHandler = () => {
-    toast.loading("Adding Subject");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(`${baseApiURL()}/subject/addSubject`, data, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          setData({ name: "", code: "" ,semester: ""});
-          // getSubjectHandler();
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
+    if (
+      data.semester === "" ||
+      data.code === "" ||
+      data.name === ""
+    ) {
+      toast.error("Please fill out all fields before adding the subject.");
+      return;
+    }
+    else{
+      toast.loading("Adding Subject");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(`${baseApiURL()}/subject/addSubject`, data, {
+          headers: headers,
+        })
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            setData({ name: "", code: "" ,semester: ""});
+            // getSubjectHandler();
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        });
+    }
   };
 
   const deleteSubjectHandler = (id) => {

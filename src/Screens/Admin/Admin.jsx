@@ -98,79 +98,90 @@ const Admin = () => {
 
   const addAdminProfile = (e) => {
     e.preventDefault();
-    toast.loading("Adding Admin");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(`${baseApiURL()}/admin/details/addDetails`, data, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          const password = generateRandomPassword();
-          const templateName = 'successful registration'; // Replace with the name of your Mailgun template
-          const templateData ={
-            // Define variables used in your template
-            'recipientName': data.firstName+' '+data.lastName,
-            'username': data.employeeId,
-            'password': password
-          };
-          sendLoginCredentials(data.email, templateName, templateData); // Implement this function
-          // const mailgun = require("mailgun-js");
-          // const DOMAIN = "csproconnect.me";
-          // const mg = mailgun({ apiKey: "ENTER_API_KEY_HERE", domain: DOMAIN });
-          // const data = {
-          //   from: "Mailgun Sandbox <postmaster@csproconnect.me>",
-          //   to: "himil3002@gmail.com",
-          //   subject: "Hello",
-          //   template: "successful registration",
-          //   'h:X-Mailgun-Variables': { test: "test" }
-          // };
-          // mg.messages().send(data, function (error, body) {
-          //   console.log(body);
-          // });
-          axios
-            .post(
-              `${baseApiURL()}/Admin/auth/register`,
-              { loginid: data.employeeId, password },
-              {
-                headers: headers,
-              }
-            )
-            .then((response) => {
-              toast.dismiss();
-              if (response.data.success) {
-                toast.success(response.data.message);
-                setFile();
-                setData({
-                  employeeId: "",
-                  firstName: "",
-                  middleName: "",
-                  lastName: "",
-                  email: "",
-                  phoneNumber: "",
-                  gender: "",
-                  profile: "",
-                });
-              } else {
-                toast.error(response.data.message);
-              }
-            })
-            .catch((error) => {
-              toast.dismiss();
-              toast.error(error.response.data.message);
-            });
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
+    if(data.employeeId === "" ||
+    data.firstName === "" ||
+    data.middleName === "" ||
+    data.lastName === "" ||
+    data.email === "" ||
+    data.phoneNumber === "" ||
+    data.gender === "" ||
+    data.profile === ""){
+      toast.error("Please fill out all fields before adding the Admin.")
+    }else{
+      toast.loading("Adding Admin");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(`${baseApiURL()}/admin/details/addDetails`, data, {
+          headers: headers,
+        })
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            const password = generateRandomPassword();
+            const templateName = 'successful registration'; // Replace with the name of your Mailgun template
+            const templateData ={
+              // Define variables used in your template
+              'recipientName': data.firstName+' '+data.lastName,
+              'username': data.employeeId,
+              'password': password
+            };
+            sendLoginCredentials(data.email, templateName, templateData); // Implement this function
+            // const mailgun = require("mailgun-js");
+            // const DOMAIN = "csproconnect.me";
+            // const mg = mailgun({ apiKey: "ENTER_API_KEY_HERE", domain: DOMAIN });
+            // const data = {
+            //   from: "Mailgun Sandbox <postmaster@csproconnect.me>",
+            //   to: "himil3002@gmail.com",
+            //   subject: "Hello",
+            //   template: "successful registration",
+            //   'h:X-Mailgun-Variables': { test: "test" }
+            // };
+            // mg.messages().send(data, function (error, body) {
+            //   console.log(body);
+            // });
+            axios
+              .post(
+                `${baseApiURL()}/admin/auth/register`,
+                { loginid: data.employeeId, password },
+                {
+                  headers: headers,
+                }
+              )
+              .then((response) => {
+                toast.dismiss();
+                if (response.data.success) {
+                  toast.success(response.data.message);
+                  setFile();
+                  setData({
+                    employeeId: "",
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    email: "",
+                    phoneNumber: "",
+                    gender: "",
+                    profile: "",
+                  });
+                } else {
+                  toast.error(response.data.message);
+                }
+              })
+              .catch((error) => {
+                toast.dismiss();
+                toast.error(error.response.data.message);
+              });
+          } else {
+            toast.error(response.data.id);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        });
+    }
   };
 
   const updateAdminProfile = (e) => {
@@ -187,9 +198,9 @@ const Admin = () => {
         toast.dismiss();
         if (response.data.success) {
           toast.success(response.data.message);
-          setFile();
-          setSearch();
-          setId();
+          setFile("");
+          setSearch("");
+          setId("");
           setData({
             employeeId: "",
             firstName: "",
@@ -260,25 +271,27 @@ const Admin = () => {
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          if (response.data.user.length !== 0) {
+          if (response.data.admind.length !== 0) {
             toast.success(response.data.message);
-            setId(response.data.user[0]._id);
+            setId(response.data.admind.id);
             setData({
-              employeeId: response.data.user[0].employeeId,
-              firstName: response.data.user[0].firstName,
-              middleName: response.data.user[0].middleName,
-              lastName: response.data.user[0].lastName,
-              email: response.data.user[0].email,
-              phoneNumber: response.data.user[0].phoneNumber,
-              gender: response.data.user[0].gender,
-              profile: response.data.user[0].profile,
+              employeeId: response.data.admind.employeeId,
+              firstName: response.data.admind.firstName,
+              middleName: response.data.admind.middleName,
+              lastName: response.data.admind.lastName,
+              email: response.data.admind.email,
+              phoneNumber: response.data.admind.phoneNumber,
+              gender: response.data.admind.gender,
+              profile: response.data.admind.profile,
             });
           } else {
             toast.dismiss();
             toast.error("No Admin Found With ID");
           }
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.id);
+          setId("");
+          setSearch("");
         }
       })
       .catch((error) => {
@@ -294,18 +307,17 @@ const Admin = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/admin/details/getDetails`, { __v: 0 },
+        `${baseApiURL()}/admin/details/getDetails`, { _class :"me.csproconnect.backend.model.adminmodel.AdminDetails" },
         { headers }
       )
       .then((response) => {
         toast.dismiss();
-        console.log(response.data)
         if (response.data.success) {
-          if (response.data.user.length === 0) {
+          if (response.data.admins.length === 0) {
             toast.error("No Admin Found!");
           } else {
             toast.success(response.data.message);
-            setAdmin(response.data.user);
+            setAdmin(response.data.admins);
           }
         } else {
           toast.error(response.data.message);

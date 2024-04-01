@@ -87,28 +87,35 @@ const Notice = () => {
 
   const addNoticehandler = (e) => {
     e.preventDefault();
-    toast.loading("Adding Notice");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(`${baseApiURL()}/notice/addNotice`, data, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          getNoticeHandler();
-          setOpen(!open);
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
+    if(data.title === "" ||
+    data.description === "" ||
+    data.type === ""){
+      toast.error("Please fill out all fields before adding the Notice.");
+    }
+    else{
+      toast.loading("Adding Notice");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(`${baseApiURL()}/notice/addNotice`, data, {
+          headers: headers,
+        })
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            getNoticeHandler();
+            setOpen(!open);
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        });
+    }
   };
 
   const deleteNoticehandler = (id) => {

@@ -159,69 +159,86 @@ const Faculty = () => {
 
   const addFacultyProfile = (e) => {
     e.preventDefault();
-    toast.loading("Adding Faculty");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(`${baseApiURL()}/faculty/details/addDetails`, data, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          const password = generateRandomPassword();
-          const templateName = 'successful registration'; // Replace with the name of your Mailgun template
-          const templateData = {
-            // Define variables used in your template
-            'recipientName': data.firstName + ' ' + data.lastName,
-            'username': data.employeeId,
-            'password': password
-          };
-          sendLoginCredentials(data.email, templateName, templateData); // Implement this function
-          axios
-            .post(
-              `${baseApiURL()}/faculty/auth/register`,
-              { loginid: data.employeeId, password },
-              {
-                headers: headers,
-              }
-            )
-            .then((response) => {
-              toast.dismiss();
-              if (response.data.success) {
-                toast.success(response.data.message);
-                setFile();
-                setData({
-                  employeeId: "",
-                  firstName: "",
-                  middleName: "",
-                  lastName: "",
-                  email: "",
-                  phoneNumber: "",
-                  // department: "",
-                  gender: "",
-                  experience: "",
-                  post: "",
-                  profile: "",
-                });
-              } else {
-                toast.error(response.data.message);
-              }
-            })
-            .catch((error) => {
-              toast.dismiss();
-              toast.error(error.response.data.message);
-            });
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
+    if(data.employeeId === "" ||
+    data.firstName === "" ||
+    data.middleName === "" ||
+    data.lastName === "" ||
+    data.email === "" ||
+    data.phoneNumber === "" ||
+    // department: "",
+    data.gender === "" ||
+    data.experience === "" ||
+    data.post === "" ||
+    data.profile === ""){
+      toast.error("Please fill out all fields before adding the Faculty.")
+    }
+    else{
+      toast.loading("Adding Faculty");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(`${baseApiURL()}/faculty/details/addDetails`, data, {
+          headers: headers,
+        })
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            const password = generateRandomPassword();
+            const templateName = 'successful registration'; // Replace with the name of your Mailgun template
+            const templateData = {
+              // Define variables used in your template
+              'recipientName': data.firstName + ' ' + data.lastName,
+              'username': data.employeeId,
+              'password': password
+            };
+            sendLoginCredentials(data.email, templateName, templateData); // Implement this function
+            axios
+              .post(
+                `${baseApiURL()}/faculty/auth/register`,
+                { loginid: data.employeeId, password },
+                {
+                  headers: headers,
+                }
+              )
+              .then((response) => {
+                toast.dismiss();
+                if (response.data.success) {
+                  toast.success(response.data.message);
+                  setFile();
+                  setData({
+                    employeeId: "",
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    email: "",
+                    phoneNumber: "",
+                    // department: "",
+                    gender: "",
+                    experience: "",
+                    post: "",
+                    profile: "",
+                  });
+                } else {
+                  toast.error(response.data.message);
+                }
+              })
+              .catch((error) => {
+                toast.dismiss();
+                toast.error(error.response.data.message);
+              });
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        });
+      
+    }
+
   };
 
   const updateFacultyProfile = (e) => {
@@ -295,7 +312,8 @@ const Faculty = () => {
             experience: response.data.facultyd.experience,
           });
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.id);
+          setId();
         }
       })
       .catch((error) => {

@@ -63,32 +63,6 @@ const Profile = () => {
         if (response.data.success) {
           changePasswordHandler(response.data.id);
         } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-        console.error(error);
-      });
-  };
-
-  const changePasswordHandler = (id) => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(
-        `${baseApiURL()}/admin/auth/update/${id}`,
-        { loginid: router.state.loginid, password: password.new },
-        {
-          headers: headers,
-        }
-      )
-      .then((response) => {
-        if (response.data.success) {
-          toast.success(response.data.id);
-          setPassword({ new: "", current: "" });
-        } else {
           toast.error(response.data.id);
         }
       })
@@ -96,6 +70,40 @@ const Profile = () => {
         toast.error(error.response.data.id);
         console.error(error);
       });
+  };
+
+  const changePasswordHandler = (id) => {
+
+    if(password.new === ""){
+      toast.error("New Password should not be empty !!");
+      return;
+    }
+    else{
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(
+          `${baseApiURL()}/admin/auth/update/${id}`,
+          { loginid: router.state.loginid, password: password.new },
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          if (response.data.success) {
+            toast.success(response.data.id);
+            setPassword({ new: "", current: "" });
+          } else {
+            toast.error(response.data.id);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.response.data.id);
+          console.error(error);
+        });
+    }
+
   };
 
   return (
