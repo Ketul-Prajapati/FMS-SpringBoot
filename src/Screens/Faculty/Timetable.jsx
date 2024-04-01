@@ -20,40 +20,40 @@ const Timetable = () => {
   //   getBranchData();
   // }, []);
   const addTimetableHandler = useCallback(() => {
-    toast.loading("Adding Timetable");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(`${baseApiURL()}/timetable/addTimetable`, addselected, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          setAddSelected({
-            // branch: "",
-            semester: "",
-            link: "",
-          });
-          setFile("");
-        } else {
-          console.log(response);
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
+    if(addselected.semester==="-- Select Semester --" || addselected.semester==="" || addselected.link===""){
+      toast.error("Please select the valid details !!");
+    }else{
+      toast.loading("Adding Timetable");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(`${baseApiURL()}/timetable/addTimetable`, addselected, {
+          headers: headers,
+        })
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            setAddSelected({
+              // branch: "",
+              semester: "",
+              link: "",
+            });
+            setFile("");
+          } else {
+            console.log(response);
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        });
+    }
   }, [addselected]);
 
   useEffect(() => {
-    if(addselected.semester==="-- Select Semester --" || addselected===""){
-      toast.error("Please select the semester !!");
-    }
-    else{
       const uploadFileToStorage = async (file) => {
         toast.loading("Upload Timetable To Server");
         const storageRef = ref(
@@ -80,7 +80,6 @@ const Timetable = () => {
         );
       };
       file && uploadFileToStorage(file);
-    }
   }, [file,addselected]);
 
   // const getBranchData = () => {
