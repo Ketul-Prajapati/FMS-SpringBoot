@@ -23,7 +23,7 @@ const Marks = () => {
       )
       .then((response) => {
         if (response.data.success) {
-          if(response.data.data.internal.length!=0){
+          if(response.data.data.internal.length!==0){
             setInternal(response.data.data.internal);
           }
 

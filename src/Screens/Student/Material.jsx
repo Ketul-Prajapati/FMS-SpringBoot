@@ -12,11 +12,12 @@ const Material = () => {
   useEffect(() => {
     toast.loading("Loading Subjects");
     axios
-      .post(`${baseApiURL()}/subject/getSubject`)
+      .get(`${baseApiURL()}/subject/getAllSubjects`)
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          setSubject(response.data.subject);
+          toast.success(response.data.message);
+          setSubject(response.data.data);
         } else {
           toast.error(response.data.message);
         }
@@ -39,9 +40,10 @@ const Material = () => {
       )
       .then((response) => {
         if (response.data.success) {
+          toast.success(response.data.message);
           setMaterial(response.data.material);
         } else {
-          // Error
+          toast.error(response.data.message);
         }
       })
       .catch((error) => {
