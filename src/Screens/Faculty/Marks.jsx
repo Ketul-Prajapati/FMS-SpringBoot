@@ -41,7 +41,7 @@ const Marks = () => {
             if (response.data.success) {
               setStudentData(response.data.studentsInClass);
             } else {
-              toast.error(response.data.message);
+              toast.error(response.data.id);
             }
           })
           .catch((error) => {
@@ -60,7 +60,7 @@ const Marks = () => {
             if (response.data.success) {
               setStudentData(response.data.studentsInClass);
             } else {
-              toast.error(response.data.message);
+              toast.error(response.data.id);
             }
           })
           .catch((error) => {
@@ -79,7 +79,7 @@ const Marks = () => {
             if (response.data.success) {
               setStudentData(response.data.studentsInClass);
             } else {
-              toast.error(response.data.message);
+              toast.error(response.data.id);
             }
           })
           .catch((error) => {
@@ -98,7 +98,7 @@ const Marks = () => {
             if (response.data.success) {
               setStudentData(response.data.studentsInClass);
             } else {
-              toast.error(response.data.message);
+              toast.error(response.data.id);
             }
           })
           .catch((error) => {
@@ -329,6 +329,7 @@ const Marks = () => {
 
   useEffect(() => {
     if (selectedSemester) {
+      selected.subject = "";
       if(selectedSemester==="-- Select --" || selectedSemester === ""){
         toast.error("Please select the semester !!");
       }

@@ -23,11 +23,15 @@ const Marks = () => {
       )
       .then((response) => {
         if (response.data.success) {
-          if(response.data.data.internal.length!==0){
-            setInternal(response.data.data.internal);
-          }
-
+          if(response.data.data!==null){
+            if(response.data.data.internal.length!==0){
+              setInternal(response.data.data.internal);
+            }
+          }else{
+            setInternal("");
+        }
         }else{
+          toast.error(response.data.message);
           setInternal("");
         }
       })
