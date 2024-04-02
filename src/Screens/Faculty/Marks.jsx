@@ -360,7 +360,7 @@ const Marks = () => {
         getSubjectData();
       }
     }
-  }, [selectedSemester, search]);
+  }, [selectedSemester, search,selected]);
 
   // useEffect(() => {
   //   // getBranchData();
