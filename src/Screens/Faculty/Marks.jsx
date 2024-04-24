@@ -329,7 +329,7 @@ const Marks = () => {
 
   useEffect(() => {
     if (selectedSemester) {
-      selected.subject = "";
+      // selected.subject = "";
       if(selectedSemester==="-- Select --" || selectedSemester === ""){
         toast.error("Please select the semester !!");
       }
@@ -360,7 +360,7 @@ const Marks = () => {
         getSubjectData();
       }
     }
-  }, [selectedSemester, search,selected]);
+  }, [selectedSemester, search]);
 
   // useEffect(() => {
   //   // getBranchData();
@@ -431,6 +431,7 @@ const Marks = () => {
                     onChange={(e) => {
                       setSearch(e.target.value);
                       setSelectedSemester(e.target.value);
+                      selected.subject="";
                     }}
                   >
                     <option defaultValue>-- Select --</option>
