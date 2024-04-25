@@ -114,7 +114,7 @@ const Login = () => {
         </div>
         <div className="text-center mt-6">
           <p className="text-gray-600 text-sm">
-            Developed by <a href="https://csproconnectdevelopers.onrender.com" class="text-blue-500">Team-Titans</a>
+            Developed by <a href="https://developers-springboot.000webhostapp.com" class="text-blue-500">Team-Titans</a>
           </p>
         </div>
       </div>
