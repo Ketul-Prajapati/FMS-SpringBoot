@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC3XllsFreN1jb5Ft4IfteKqN7XRcJO3SI",
+    apiKey: "add apikey here",
     authDomain: "csproconnect-f40a5.firebaseapp.com",
     projectId: "csproconnect-f40a5",
     storageBucket: "csproconnect-f40a5.appspot.com",
