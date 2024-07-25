@@ -33,7 +33,7 @@ The **Faculty Management System** is designed to streamline departmental tasks, 
 - **Improved Productivity:** Reduce administrative overhead and enhance resource allocation.
 
 ## Live Demo
-Try it live on [csproconnect.tech](https://www.csproconnect.tech) using the default credentials:
+Try it live on [csproconnect.tech](https://csproconnect.tech) using the default credentials:
 - **Username:** 1234
 - **Password:** root
 
