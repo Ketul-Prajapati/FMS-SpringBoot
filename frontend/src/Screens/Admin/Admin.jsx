@@ -6,9 +6,18 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../firebase/config";
 import { baseApiURL } from "../../baseUrl";
 import { FiSearch, FiUpload } from "react-icons/fi";
+import { FaFilePdf, FaFileExcel } from "react-icons/fa";
+import "jspdf-autotable";
+import * as XLSX from "xlsx";
+import * as formData from 'form-data';
+import { mailgunApi } from "../../mailgun_api";
+import Mailgun from "mailgun.js";
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({ username: 'api', key: `${mailgunApi()}` });
 
 const Admin = () => {
   const [file, setFile] = useState();
+  const [admin, setAdmin] = useState([]);
   const [selected, setSelected] = useState("add");
   const [data, setData] = useState({
     employeeId: "",
@@ -27,7 +36,7 @@ const Admin = () => {
       toast.loading("Upload Photo To Storage");
       const storageRef = ref(
         storage,
-        `Admin Profile/${data.department}/${data.employeeId}`
+        `Admin Profile/${data.employeeId}`
       );
       const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(
@@ -51,59 +60,128 @@ const Admin = () => {
     file && uploadFileToStorage(file);
   }, [data, file]);
 
+  function sendMailgunEmail(to, subject, templateName, templateData) {
+    mg.messages.create('csproconnect.tech', {
+      from: 'CSProConnect Admin <admin@csproconnect.tech>',
+      to: [to],
+      subject: subject,
+      template: templateName, // Use the name of the Mailgun template
+      'h:X-Mailgun-Variables': JSON.stringify(templateData),
+    })
+      .then(msg => console.log(msg)) // logs response data
+      .catch(err => console.log(err)); // logs any error
+  }
+
+
+
+  function generateRandomPassword() {
+    let pass = '';
+    let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+      'abcdefghijklmnopqrstuvwxyz0123456789@#$';
+
+    for (let i = 1; i <= 8; i++) {
+      let char = Math.floor(Math.random()
+        * str.length + 1);
+
+      pass += str.charAt(char)
+    }
+
+    return pass;
+  }
+
+  function sendLoginCredentials(email, templateName, templateData) {
+    // Compose the email message
+    const subject = "Welcome to CSProConnect - Your Account Credentials"
+    // Send the email
+    sendMailgunEmail(email, subject, templateName, templateData);
+  }
+
   const addAdminProfile = (e) => {
     e.preventDefault();
-    toast.loading("Adding Admin");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(`${baseApiURL()}/admin/details/addDetails`, data, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          axios
-            .post(
-              `${baseApiURL()}/Admin/auth/register`,
-              { loginid: data.employeeId, password: 112233 },
-              {
-                headers: headers,
-              }
-            )
-            .then((response) => {
-              toast.dismiss();
-              if (response.data.success) {
-                toast.success(response.data.message);
-                setFile();
-                setData({
-                  employeeId: "",
-                  firstName: "",
-                  middleName: "",
-                  lastName: "",
-                  email: "",
-                  phoneNumber: "",
-                  gender: "",
-                  profile: "",
-                });
-              } else {
-                toast.error(response.data.message);
-              }
-            })
-            .catch((error) => {
-              toast.dismiss();
-              toast.error(error.response.data.message);
-            });
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
+    if(data.employeeId === "" ||
+    data.firstName === "" ||
+    data.middleName === "" ||
+    data.lastName === "" ||
+    data.email === "" ||
+    data.phoneNumber === "" ||
+    data.gender === "" ||
+    data.profile === ""){
+      toast.error("Please fill out all fields before adding the Admin.")
+    }else{
+      toast.loading("Adding Admin");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(`${baseApiURL()}/admin/details/addDetails`, data, {
+          headers: headers,
+        })
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            const password = generateRandomPassword();
+            const templateName = 'successful registration'; // Replace with the name of your Mailgun template
+            const templateData ={
+              // Define variables used in your template
+              'recipientName': data.firstName+' '+data.lastName,
+              'username': data.employeeId,
+              'password': password
+            };
+            sendLoginCredentials(data.email, templateName, templateData); // Implement this function
+            // const mailgun = require("mailgun-js");
+            // const DOMAIN = "csproconnect.me";
+            // const mg = mailgun({ apiKey: "ENTER_API_KEY_HERE", domain: DOMAIN });
+            // const data = {
+            //   from: "Mailgun Sandbox <postmaster@csproconnect.me>",
+            //   to: "himil3002@gmail.com",
+            //   subject: "Hello",
+            //   template: "successful registration",
+            //   'h:X-Mailgun-Variables': { test: "test" }
+            // };
+            // mg.messages().send(data, function (error, body) {
+            //   console.log(body);
+            // });
+            axios
+              .post(
+                `${baseApiURL()}/admin/auth/register`,
+                { loginid: data.employeeId, password },
+                {
+                  headers: headers,
+                }
+              )
+              .then((response) => {
+                toast.dismiss();
+                if (response.data.success) {
+                  toast.success(response.data.message);
+                  setFile();
+                  setData({
+                    employeeId: "",
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    email: "",
+                    phoneNumber: "",
+                    gender: "",
+                    profile: "",
+                  });
+                } else {
+                  toast.error(response.data.message);
+                }
+              })
+              .catch((error) => {
+                toast.dismiss();
+                toast.error(error.response.data.message);
+              });
+          } else {
+            toast.error(response.data.id);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        });
+    }
   };
 
   const updateAdminProfile = (e) => {
@@ -120,9 +198,9 @@ const Admin = () => {
         toast.dismiss();
         if (response.data.success) {
           toast.success(response.data.message);
-          setFile();
-          setSearch();
-          setId();
+          setFile("");
+          setSearch("");
+          setId("");
           setData({
             employeeId: "",
             firstName: "",
@@ -143,6 +221,41 @@ const Admin = () => {
       });
   };
 
+  const handleDownloadExcel = () => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([
+      ["SR NO", "Employee Id", "Name"],
+      ...admin.map((admin, index) => [index + 1,
+      admin.employeeId,
+      `${admin.lastName} ${admin.firstName} ${admin.middleName}`,
+      ]),
+    ]);
+
+    XLSX.utils.book_append_sheet(wb, ws, "Admin Sheet");
+    XLSX.writeFile(wb, `Admin_List.xlsx`);
+  };
+
+  const handleDownloadPDF = () => {
+    // Importing 'jspdf' library
+    import("jspdf").then((jsPDF) => {
+      const doc = new jsPDF.default();
+      doc.setFont("arial"); // Set font type
+      doc.setFontSize(15); // Set font size
+      const pdfTitle = `LIST OF ADMINS`;
+      doc.text(pdfTitle, 60, 10);
+      const columns = ["SR NO", "EMPLOYEE ID", "NAME"];
+      const rows = admin.map((admin, index) => [
+        index + 1, admin.employeeId,
+        `${admin.lastName} ${admin.firstName} ${admin.middleName}`,
+      ]);
+      doc.autoTable({
+        head: [columns],
+        body: rows,
+      });
+      doc.save(`Admin_List.pdf`);
+    });
+  }
+
   const searchAdminHandler = (e) => {
     e.preventDefault();
     toast.loading("Getting Admin");
@@ -158,22 +271,53 @@ const Admin = () => {
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          if (response.data.user.length !== 0) {
+          if (response.data.admind.length !== 0) {
             toast.success(response.data.message);
-            setId(response.data.user[0]._id);
+            setId(response.data.admind.id);
             setData({
-              employeeId: response.data.user[0].employeeId,
-              firstName: response.data.user[0].firstName,
-              middleName: response.data.user[0].middleName,
-              lastName: response.data.user[0].lastName,
-              email: response.data.user[0].email,
-              phoneNumber: response.data.user[0].phoneNumber,
-              gender: response.data.user[0].gender,
-              profile: response.data.user[0].profile,
+              employeeId: response.data.admind.employeeId,
+              firstName: response.data.admind.firstName,
+              middleName: response.data.admind.middleName,
+              lastName: response.data.admind.lastName,
+              email: response.data.admind.email,
+              phoneNumber: response.data.admind.phoneNumber,
+              gender: response.data.admind.gender,
+              profile: response.data.admind.profile,
             });
           } else {
             toast.dismiss();
             toast.error("No Admin Found With ID");
+          }
+        } else {
+          toast.error(response.data.id);
+          setId("");
+          setSearch("");
+        }
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+        console.error(error);
+      });
+  };
+
+  const viewAdminHandler = (e) => {
+    toast.loading("Getting admin list");
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    axios
+      .post(
+        `${baseApiURL()}/admin/details/getDetails`, { _class :"me.csproconnect.backend.model.adminmodel.AdminDetails" },
+        { headers }
+      )
+      .then((response) => {
+        toast.dismiss();
+        if (response.data.success) {
+          if (response.data.admins.length === 0) {
+            toast.error("No Admin Found!");
+          } else {
+            toast.success(response.data.message);
+            setAdmin(response.data.admins);
           }
         } else {
           toast.error(response.data.message);
@@ -184,6 +328,7 @@ const Admin = () => {
         console.error(error);
       });
   };
+
   const setMenuHandler = (type) => {
     setSelected(type);
     setFile("");
@@ -207,27 +352,32 @@ const Admin = () => {
         <Heading title="Admin Details" />
         <div className="flex justify-end items-center w-full">
           <button
-            className={`${
-              selected === "add" && "border-b-2 "
-            }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
+            className={`${selected === "add" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
             onClick={() => setMenuHandler("add")}
           >
             Add Admin
           </button>
           <button
-            className={`${
-              selected === "edit" && "border-b-2 "
-            }border-blue-500 px-4 py-2 text-black rounded-sm`}
+            className={`${selected === "edit" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
             onClick={() => setMenuHandler("edit")}
           >
             Edit Admin
+          </button>
+          <button
+            className={`${selected === "view" && "border-b-2 "
+              }border-blue-500 px-4 py-2 text-black rounded-sm`}
+            onClick={() => { setMenuHandler("view"); viewAdminHandler() }}
+          >
+            View Admin
           </button>
         </div>
       </div>
       {selected === "add" && (
         <form
           onSubmit={addAdminProfile}
-          className="w-[70%] flex justify-center items-center flex-wrap gap-6 mx-auto mt-10"
+          className="w-[70%] flex justify-center items-center flex-wrap gap-8 mx-auto mt-10"
         >
           <div className="w-[40%]">
             <label htmlFor="firstname" className="leading-7 text-sm ">
@@ -368,7 +518,7 @@ const Admin = () => {
           {search && id && (
             <form
               onSubmit={updateAdminProfile}
-              className="w-[70%] flex justify-center items-center flex-wrap gap-6 mx-auto mt-10"
+              className="w-[70%] flex justify-center items-center flex-wrap gap-10 mx-auto mt-10"
             >
               <div className="w-[40%]">
                 <label htmlFor="firstname" className="leading-7 text-sm ">
@@ -489,12 +639,66 @@ const Admin = () => {
               </div>
               <button
                 type="submit"
-                className="bg-blue-500 px-6 py-3 rounded-sm mb-6 text-white"
+                className="bg-blue-500 flex px-6 py-3 rounded-sm mb-6 text-white"
               >
                 Update Admin
               </button>
             </form>
           )}
+        </div>
+      )}
+      {selected === "view" && (
+        <div className="mt-8 w-full">
+          <div className="border border-blue-200 shadow-lg rounded-lg mb-4">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-blue-300">
+                  <th className="py-2 px-4 border border-blue-700">SR NO</th>
+                  <th className="py-2 px-4 border border-blue-700">Employee Id</th>
+                  <th className="py-2 px-4 border border-blue-700">Name</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {admin.sort((a, b) => {
+                  const lastNameCompare = a.lastName.localeCompare(b.lastName);
+                  if (lastNameCompare !== 0) {
+                    return lastNameCompare;
+                  }
+                  return a.firstName.localeCompare(b.firstName);
+                }).map((item, index) => (
+                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{index + 1}</td>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{item.employeeId}</td>
+                    <td className="py-2 px-4 border border-blue-700 text-center">{`${item.lastName} ${item.firstName} ${item.middleName}`}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-center space-x-4 mt-12">
+            <>
+              <button
+                className="px-4 py-2 mr-8 text-xl flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                onClick={handleDownloadExcel}
+              >
+                Download Excel
+                <span className="ml-2">
+                  <FaFileExcel />
+                </span>
+              </button>
+
+              <button
+                className="px-4 py-2 ml-8 text-xl flex justify-center items-center text-white bg-blue-500 hover:bg-blue-600 rounded-md"
+                onClick={handleDownloadPDF}
+              >
+                Download PDF
+                <span className="ml-2">
+                  <FaFilePdf />
+                </span>
+              </button>
+            </>
+          </div>
         </div>
       )}
     </div>

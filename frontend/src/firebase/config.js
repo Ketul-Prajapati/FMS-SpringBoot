@@ -3,13 +3,14 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_API,
-    authDomain: process.env.REACT_APP_AUTHDOMAIN,
-    projectId: process.env.REACT_APP_PROJECTID,
-    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_SENDERID,
-    appId: process.env.REACT_APP_APPID,
-};
+    apiKey: "add apikey here",
+    authDomain: "csproconnect-f40a5.firebaseapp.com",
+    projectId: "csproconnect-f40a5",
+    storageBucket: "csproconnect-f40a5.appspot.com",
+    messagingSenderId: "579282644402",
+    appId: "1:579282644402:web:adab4e2fa6deb4d6b1c8ab",
+    measurementId: "G-7LPWZZ7WTB"
+  }
 
 
 export const app = initializeApp(firebaseConfig);

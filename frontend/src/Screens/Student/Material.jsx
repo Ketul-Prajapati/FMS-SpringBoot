@@ -12,11 +12,12 @@ const Material = () => {
   useEffect(() => {
     toast.loading("Loading Subjects");
     axios
-      .get(`${baseApiURL()}/subject/getSubject`)
+      .get(`${baseApiURL()}/subject/getAllSubjects`)
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          setSubject(response.data.subject);
+          toast.success(response.data.message);
+          setSubject(response.data.data);
         } else {
           toast.error(response.data.message);
         }
@@ -39,9 +40,10 @@ const Material = () => {
       )
       .then((response) => {
         if (response.data.success) {
+          toast.success(response.data.message);
           setMaterial(response.data.material);
         } else {
-          // Error
+          toast.error(response.data.message);
         }
       })
       .catch((error) => {
@@ -64,7 +66,7 @@ const Material = () => {
             name="subject"
             id="subject"
             onChange={onSelectChangeHandler}
-            className="px-2 bg-blue-50 py-3 rounded-sm text-base accent-blue-700"
+            className="px-2 bg-blue-50 py-3 rounded-sm text-base accent-blue-700 w-[80%]"
           >
             <option defaultValue value="select">
               -- Select Subject --
@@ -80,7 +82,8 @@ const Material = () => {
           </select>
           <button
             onClick={getSubjectMaterial}
-            className="bg-blue-500 text-white py-3 px-4 text-2xl rounded-sm"
+            // className="border-blue-500 text-blue py-3 px-4 text-2xl rounded-sm"
+            className="relative text-2xl py-3 px-4 flex justify-center items-center border-2 border-red-500 rounded text-red-500"
           >
             <HiOutlineSearch />
           </button>

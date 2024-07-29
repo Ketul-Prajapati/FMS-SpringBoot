@@ -20,7 +20,7 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/${router.state.type}/details/getDetails`,
+        `${baseApiURL()}/${router.state.type.toLowerCase()}/details/getDetails`,
         { employeeId: router.state.loginid },
         {
           headers: headers,
@@ -28,11 +28,11 @@ const Profile = () => {
       )
       .then((response) => {
         if (response.data.success) {
-          setData(response.data.user);
+          setData(response.data.facultyd);
           dispatch(
             setUserData({
-              fullname: `${response.data.user[0].firstName} ${response.data.user[0].middleName} ${response.data.user[0].lastName}`,
-              employeeId: response.data.user[0].employeeId,
+              fullname: `${response.data.facultyd.firstName} ${response.data.facultyd.middleName} ${response.data.facultyd.lastName}`,
+              employeeId: response.data.facultyd.employeeId,
             })
           );
         } else {
@@ -61,39 +61,45 @@ const Profile = () => {
         if (response.data.success) {
           changePasswordHandler(response.data.id);
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.id);
         }
       })
       .catch((error) => {
-        toast.error(error.response.data.message);
+        toast.error(error.response.data.id);
         console.error(error);
       });
   };
 
   const changePasswordHandler = (id) => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(
-        `${baseApiURL()}/faculty/auth/update/${id}`,
-        { loginid: router.state.loginid, password: password.new },
-        {
-          headers: headers,
-        }
-      )
-      .then((response) => {
-        if (response.data.success) {
-          toast.success(response.data.message);
-          setPassword({ new: "", current: "" });
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-        console.error(error);
-      });
+    if(password.new === ""){
+      toast.error("New Password should not be empty !!");
+      return;
+    }
+    else{
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(
+          `${baseApiURL()}/faculty/auth/update/${id}`,
+          { loginid: router.state.loginid, password: password.new },
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          if (response.data.success) {
+            toast.success(response.data.id);
+            setPassword({ new: "", current: "" });
+          } else {
+            toast.error(response.data.id);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.response.data.id);
+          console.error(error);
+        });
+    }
   };
 
   return (
@@ -102,23 +108,23 @@ const Profile = () => {
         <>
           <div>
             <p className="text-2xl font-semibold">
-              Hello {data[0].firstName} {data[0].middleName} {data[0].lastName}{" "}
+              Hello {data.firstName} {data.middleName} {data.lastName}{" "}
               👋
             </p>
             <div className="mt-3">
               <p className="text-lg font-normal mb-2">
-                Employee Id: {data[0].employeeId}
+                Employee Id: {data.employeeId}
               </p>
-              <p className="text-lg font-normal mb-2">Post: {data[0].post}</p>
+              <p className="text-lg font-normal mb-2">Post: {data.post}</p>
               <p className="text-lg font-normal mb-2">
-                Email Id: {data[0].email}
-              </p>
-              <p className="text-lg font-normal mb-2">
-                Phone Number: {data[0].phoneNumber}
+                Email Id: {data.email}
               </p>
               <p className="text-lg font-normal mb-2">
+                Phone Number: {data.phoneNumber}
+              </p>
+              {/* <p className="text-lg font-normal mb-2">
                 Department: {data[0].department}
-              </p>
+              </p> */}
             </div>
             <button
               className={`${
@@ -162,9 +168,9 @@ const Profile = () => {
             )}
           </div>
           <img
-            src={data[0].profile}
+            src={data.profile}
             alt="faculty profile"
-            className="h-[200px] w-[200px] object-cover rounded-lg shadow-md"
+            className="h-[15%] w-[15%] object-cover rounded-lg shadow-md"
           />
         </>
       )}

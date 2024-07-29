@@ -20,7 +20,7 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/${router.state.type}/details/getDetails`,
+        `${baseApiURL()}/${router.state.type.toLowerCase()}/details/getDetails`,
         { employeeId: router.state.loginid },
         {
           headers: headers,
@@ -28,13 +28,13 @@ const Profile = () => {
       )
       .then((response) => {
         if (response.data.success) {
-          setData(response.data.user[0]);
+          setData(response.data.admind);
           dispatch(
             setUserData({
-              fullname: `${response.data.user[0].firstName} ${response.data.user[0].middleName} ${response.data.user[0].lastName}`,
-              semester: response.data.user[0].semester,
-              enrollmentNo: response.data.user[0].enrollmentNo,
-              branch: response.data.user[0].branch,
+              fullname: `${response.data.admind.firstName} ${response.data.admind.middleName} ${response.data.admind.lastName}`,
+              semester: response.data.admind.semester,
+              enrollmentNo: response.data.admind.enrollmentNo,
+              // branch: response.data.user[0].branch,
             })
           );
         } else {
@@ -53,7 +53,7 @@ const Profile = () => {
     };
     axios
       .post(
-        `${baseApiURL()}/student/auth/login`,
+        `${baseApiURL()}/admin/auth/login`,
         { loginid: router.state.loginid, password: password.current },
         {
           headers: headers,
@@ -63,39 +63,47 @@ const Profile = () => {
         if (response.data.success) {
           changePasswordHandler(response.data.id);
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.id);
         }
       })
       .catch((error) => {
-        toast.error(error.response.data.message);
+        toast.error(error.response.data.id);
         console.error(error);
       });
   };
 
   const changePasswordHandler = (id) => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(
-        `${baseApiURL()}/student/auth/update/${id}`,
-        { loginid: router.state.loginid, password: password.new },
-        {
-          headers: headers,
-        }
-      )
-      .then((response) => {
-        if (response.data.success) {
-          toast.success(response.data.message);
-          setPassword({ new: "", current: "" });
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-        console.error(error);
-      });
+
+    if(password.new === ""){
+      toast.error("New Password should not be empty !!");
+      return;
+    }
+    else{
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(
+          `${baseApiURL()}/admin/auth/update/${id}`,
+          { loginid: router.state.loginid, password: password.new },
+          {
+            headers: headers,
+          }
+        )
+        .then((response) => {
+          if (response.data.success) {
+            toast.success(response.data.id);
+            setPassword({ new: "", current: "" });
+          } else {
+            toast.error(response.data.id);
+          }
+        })
+        .catch((error) => {
+          toast.error(error.response.data.id);
+          console.error(error);
+        });
+    }
+
   };
 
   return (
@@ -160,8 +168,8 @@ const Profile = () => {
           </div>
           <img
             src={data.profile}
-            alt="student profile"
-            className="h-[200px] w-[200px] object-cover rounded-lg shadow-md"
+            alt="admin profile"
+            className="h-[15%] w-[15%] object-cover rounded-lg shadow-md"
           />
         </>
       )}

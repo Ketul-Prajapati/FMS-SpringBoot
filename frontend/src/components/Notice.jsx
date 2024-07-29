@@ -27,11 +27,11 @@ const Notice = () => {
     let data = {};
     if (router.pathname.replace("/", "") === "student") {
       data = {
-        type: ["student", "both"],
+        typelist: ["student", "both"],
       };
     } else {
       data = {
-        type: ["student", "both", "faculty"],
+        typelist: ["student", "both", "faculty"],
       };
     }
     const headers = {
@@ -43,7 +43,7 @@ const Notice = () => {
       })
       .then((response) => {
         if (response.data.success) {
-          setNotice(response.data.notice);
+          setNotice(response.data.notices);
         } else {
           toast.error(response.data.message);
         }
@@ -58,11 +58,11 @@ const Notice = () => {
     let data = {};
     if (router.pathname.replace("/", "") === "student") {
       data = {
-        type: ["student", "both"],
+        typelist: ["student", "both"],
       };
     } else {
       data = {
-        type: ["student", "both", "faculty"],
+        typelist: ["student", "both", "faculty"],
       };
     }
     const headers = {
@@ -74,7 +74,7 @@ const Notice = () => {
       })
       .then((response) => {
         if (response.data.success) {
-          setNotice(response.data.notice);
+          setNotice(response.data.notices);
         } else {
           toast.error(response.data.message);
         }
@@ -87,28 +87,35 @@ const Notice = () => {
 
   const addNoticehandler = (e) => {
     e.preventDefault();
-    toast.loading("Adding Notice");
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    axios
-      .post(`${baseApiURL()}/notice/addNotice`, data, {
-        headers: headers,
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          getNoticeHandler();
-          setOpen(!open);
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
+    if(data.title === "" ||
+    data.description === "" ||
+    data.type === ""){
+      toast.error("Please fill out all fields before adding the Notice.");
+    }
+    else{
+      toast.loading("Adding Notice");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(`${baseApiURL()}/notice/addNotice`, data, {
+          headers: headers,
+        })
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            getNoticeHandler();
+            setOpen(!open);
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          toast.error(error.response.data.message);
+        });
+    }
   };
 
   const deleteNoticehandler = (id) => {
@@ -141,7 +148,7 @@ const Notice = () => {
       "Content-Type": "application/json",
     };
     axios
-      .post(`${baseApiURL()}/notice/updateNotice/${id}`, data, {
+      .put(`${baseApiURL()}/notice/updateNotice/${id}`, data, {
         headers: headers,
       })
       .then((response) => {
@@ -169,7 +176,7 @@ const Notice = () => {
       type: notice[index].type,
       link: notice[index].link,
     });
-    setId(notice[index]._id);
+    setId(notice[index].id);
   };
 
   const openHandler = () => {
@@ -179,7 +186,7 @@ const Notice = () => {
   };
 
   return (
-    <div className="w-[85%] mx-auto flex justify-center items-start flex-col my-10">
+    <div className="w-[85%] mx-auto flex justify-center items-center flex-col my-10">
       <div className="relative flex justify-between items-center w-full">
         <Heading title="Notices" />
         {(router.pathname === "/faculty" || router.pathname === "/admin") &&
@@ -211,7 +218,7 @@ const Notice = () => {
             notice.map((item, index) => {
               return (
                 <div
-                  key={item._id}
+                  key={item.id}
                   className="border-blue-500 border-2 w-full rounded-md shadow-sm py-4 px-6 mb-4 relative"
                 >
                   {(router.pathname === "/faculty" ||
@@ -222,7 +229,7 @@ const Notice = () => {
                       </span>
                       <span
                         className="text-2xl group-hover:text-blue-500 ml-2 cursor-pointer hover:text-red-500"
-                        onClick={() => deleteNoticehandler(item._id)}
+                        onClick={() => deleteNoticehandler(item.id)}
                       >
                         <MdDeleteOutline />
                       </span>
@@ -268,7 +275,7 @@ const Notice = () => {
         </div>
       )}
       {open && (
-        <form className="mt-8 w-full">
+        <form className="mt-8 w-full flex flex-col justify-center items-center">
           <div className="w-[40%] mt-2">
             <label htmlFor="title">Notice Title</label>
             <input
@@ -303,7 +310,7 @@ const Notice = () => {
             />
           </div>
           <div className="w-[40%] mt-4">
-            <label htmlFor="type">Type Of Notice</label>
+            <label htmlFor="type" className="mr-3">Type Of Notice</label>
             <select
               id="type"
               className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
