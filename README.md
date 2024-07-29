@@ -104,5 +104,11 @@ The Faculty Management System significantly enhances the efficiency and effectiv
 ---
 
 **Developed by Team Titans**
+## Collaborators
+- [Ketul Prajapati - @ketul-prajapati](https://github.com/Ketul-Prajapati)
+- [Himilsinh Sindha - @himilsinh-sindha](https://github.com/himilsinh-sindha)
+- [Preet Mistry - @preet-mistry](https://github.com/Preet2003)
+- [Bhaumik Lodhia - @bhaumik29](https://www.github.com/bhaumik29)
+- [Kuldeepsinh Jhala - @kuldeepsinh-jhala](https://github.com/kuldeepjhala-dev)
 
 *Feel free to reach out for any questions or collaboration opportunities!*
