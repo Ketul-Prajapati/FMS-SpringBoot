@@ -44,11 +44,11 @@ Try it live on [csproconnect.tech](https://csproconnect.tech) using the default 
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/yourusername/faculty-management-system.git
+    git clone https://github.com/Ketul-Prajapati/FMS-SpringBoot.git
     ```
 2. **Navigate to the project directory:**
     ```bash
-    cd faculty-management-system
+    cd FMS-SpringBoot
     ```
 3. **Frontend Setup:**
     - Navigate to the frontend directory:
