@@ -21,7 +21,7 @@ The **Faculty Management System** is designed to streamline departmental tasks, 
 - View and download timetables, marks, notices, and materials.
 
 ## Tech Stack
-- **Frontend:** React.js
+- **Frontend:** React.js,Redux Toolkit
 - **Backend:** Spring Boot
 - **Database:** MongoDB
 - **Storage:** Firebase
